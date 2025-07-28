@@ -35,12 +35,12 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
-        terraform_version: 1.11.0
+        terraform_version: 1.9.8
         terraform_wrapper: true
 
     # Add in tutorial 6-Terarform-Docs
     # - name: Render terraform docs and push changes back to PR
-    #   uses: terraform-docs/gh-actions@main
+    #   uses: terraform-docs/gh-actions@v1.3.0
     #   with:
     #     working-dir: ./2-Terraform-AZURE-Services-Creation/1-acr, ./2-Terraform-AZURE-Services-Creation/2-vnet, ./2-Terraform-AZURE-Services-Creation/3-log-analytics, ./2-Terraform-AZURE-Services-Creation/4-aks
     #     output-file: README.md
@@ -53,7 +53,7 @@ jobs:
     
     # Add in tutorial 5-Terraform-Static-Code-Analysis
     # - name: tfsec
-    #   uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+    #   uses: aquasecurity/tfsec-pr-commenter-action@v1.3.0
     #   with:
     #     tfsec_args: --soft-fail
     #     github_token: ${{ github.token }}
@@ -70,6 +70,7 @@ jobs:
         commit_message: "Terraform fmt"
         file_pattern: "*.tf *.tfvars"
         commit_user_name: "github-actions[bot]"
+        commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
 
     - name: Terraform Plan
       run: terraform plan -no-color -input=false

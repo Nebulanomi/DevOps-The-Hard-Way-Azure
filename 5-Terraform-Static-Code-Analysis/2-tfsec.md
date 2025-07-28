@@ -54,7 +54,7 @@ In this lab, you'll learn how to use tfsec, a static analysis security scanner f
 
    ```yaml
    - name: tfsec
-     uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+     uses: aquasecurity/tfsec-pr-commenter-action@v1.3.0
      with:
        tfsec_args: --soft-fail
        github_token: ${{ github.token }}

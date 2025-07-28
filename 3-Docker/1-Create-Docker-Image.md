@@ -20,9 +20,9 @@ In this lab, you'll create a Docker image to containerise the Thomasthornton.clo
 2. **Review the Dockerfile**
 
    Open the Dockerfile and note its key components:
-- [ ] Uses the latest Python image as base
-- [ ] Creates a `/build` directory for the app
-- [ ] Copies the `app` directory and `requirements.txt` into `/build`
+- [ ] Uses Python 3.13-slim image as base
+- [ ] Creates a `/app` directory for the application
+- [ ] Copies the `app` directory and `requirements.txt` into `/app`
 - [ ] Configures the container to run the app on startup
 
 3. **Build the Docker Image**

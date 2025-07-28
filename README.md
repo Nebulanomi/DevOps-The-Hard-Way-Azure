@@ -34,17 +34,17 @@ We're going to deploy the thomasthornton.cloud application, transforming it from
 
 Get ready to utilise a range of cutting-edge technologies and platforms to establish your DevOps environment:
 
-| Technology | Purpose |
-|------------|---------|
-| Azure | Cloud hosting and services |
-| GitHub | Code repository |
-| Python | Application and automation |
-| Terraform | Infrastructure as Code |
-| Docker | Containerisation |
-| Kubernetes (AKS) | Container orchestration |
-| GitHub Actions | CI/CD |
-| Checkov | Automated testing |
-| Terraform-docs | Documentation automation |
+| Technology | Purpose | Version/Info |
+|------------|---------|--------------|
+| Azure | Cloud hosting and services | Latest Azure services |
+| GitHub | Code repository | GitHub Actions for CI/CD |
+| Python | Application and automation | Python 3.13 |
+| Terraform | Infrastructure as Code | v1.9.8+ |
+| Docker | Containerisation | Latest stable |
+| Kubernetes (AKS) | Container orchestration | v1.33 |
+| GitHub Actions | CI/CD | Latest workflows |
+| Checkov | Automated security testing | v3.2.4+ |
+| Terraform-docs | Documentation automation | Latest |
 
 ## 🧪 Labs
 

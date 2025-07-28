@@ -27,11 +27,9 @@ In this lab, you'll learn how to automate Terraform documentation using terrafor
 2. **Add terraform-docs GitHub Action**
 
    - Open your GitHub Actions workflow file (`.github/workflows/main.yml`) 
-   - Add the terraform-docs action:
-
    ```yaml
    - name: Render terraform docs and push changes back to PR
-     uses: terraform-docs/gh-actions@main
+     uses: terraform-docs/gh-actions@v1.3.0
      with:
        working-dir: .
        output-file: README.md

@@ -21,8 +21,12 @@ In this lab, you'll create and understand the Kubernetes manifest for deploying 
 2. **Locate the Manifest File**
    Find the `deployment.yml` file in the `4-kubernetes_manifest` directory.
 
-3. **Update the Image URL**
-   Open `deployment.yml` and locate line 24. Update the image URL to match the image stored in your Azure Container Registry.
+3. **Update the Image URL and Review Enhanced Features**
+   Open `deployment.yml` and:
+   - [ ] Update line 24 with your ACR image URL (using tag v2 for the latest version)
+   - [ ] Review the health checks (liveness and readiness probes) for improved reliability
+   - [ ] Note the enhanced resource limits for better performance
+   - [ ] Understand the container port configuration
 
 ## 🔍 Verification
 To ensure your manifest is correctly configured:
@@ -34,7 +38,9 @@ To ensure your manifest is correctly configured:
 After reviewing the manifest, consider these questions:
 1. What is the purpose of each component (Deployment, Service, Namespace) in the manifest?
 2. Why is it important to update the image URL in the manifest?
-3. How does the manifest help in managing your application in Kubernetes?
+3. How do liveness and readiness probes improve application reliability?
+4. What are the benefits of setting resource requests and limits?
+5. How does the LoadBalancer service type expose your application?
 
 ## 🚀 Next Steps
 With your Kubernetes manifest prepared, you're ready to deploy your application to AKS. In the next lab, we'll cover how to apply this manifest to your cluster.

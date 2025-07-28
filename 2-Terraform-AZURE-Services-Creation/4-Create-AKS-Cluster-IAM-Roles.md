@@ -19,8 +19,12 @@ In this lab, you'll create an Azure Kubernetes Service (AKS) cluster and set up 
    Review the [AKS Terraform configuration](https://github.com/thomast1906/DevOps-The-Hard-Way-Azure/tree/main/2-Terraform-AZURE-Services-Creation/4-aks). The configuration includes:
 
    **aks.tf:**
-   - [ ] Creates AKS Cluster using `azurerm_kubernetes_cluster`
-   - [ ] Sets up role assignments using `azurerm_role_assignment`
+   - [ ] Creates AKS Cluster using `azurerm_kubernetes_cluster` with Kubernetes 1.33
+   - [ ] Enables auto-scaling (min: 1, max: 5 nodes) for cost optimization
+   - [ ] Configures availability zones for high availability
+   - [ ] Sets up Azure RBAC and managed identity integration
+   - [ ] Enables automatic patch upgrade channel
+   - [ ] Configures network policies for enhanced security
    - [ ] Uses the `uksouth` region (can change if desired)
 
    **managed_identity.tf:**
@@ -59,9 +63,26 @@ Example screenshot of created resources:
 
 After creating the AKS cluster and IAM roles, consider these questions:
 1. Why is it important to use managed identities with AKS?
-2. How does RBAC enhance the security of your AKS cluster?
+2. How does Azure RBAC enhance the security of your AKS cluster compared to basic RBAC?
 3. What are the benefits of using federated identity credentials?
+4. How does auto-scaling help with cost optimization and performance?
+5. Why are availability zones important for production workloads?
+6. What security benefits do network policies provide?
 
-## 💡 Pro Tip
+## 💡 Pro Tips
 
-Consider enabling Azure Policy for Kubernetes to enforce organisational standards and assess compliance at scale for your AKS clusters.
+1. **Migration from Existing Clusters**: If upgrading from a previous version of this tutorial:
+   - Kubernetes 1.33 requires a cluster upgrade procedure
+   - Azure RBAC is now enabled by default for enhanced security
+   - Auto-scaling may affect your cost structure but improves efficiency
+   - Network policies may require reviewing existing pod communication patterns
+
+2. **Security Best Practices**: 
+   - Enable Azure Policy for Kubernetes to enforce organisational standards and assess compliance at scale
+   - Regularly review and audit RBAC permissions
+   - Monitor cluster logs through the integrated Log Analytics workspace
+
+3. **Cost Optimization**:
+   - Auto-scaling will automatically adjust node count based on demand
+   - Use spot instances for non-critical workloads to reduce costs
+   - Monitor resource usage through Azure Monitor

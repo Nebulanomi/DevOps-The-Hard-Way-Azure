@@ -33,7 +33,7 @@ Because code will be written for *DevOps The Hard Way*, you will need a code edi
 
 ### Terraform
 
-[Terraform Download](https://www.terraform.io/downloads.html) - This  on version 1.9.6
+[Terraform Download](https://www.terraform.io/downloads.html) - Use version 1.9.8 or higher
 
 ### Docker
 To build the Docker image, you can use Docker Desktop for Windows or MacOS. 
@@ -46,8 +46,40 @@ To store the code that you'll be writing, you can create your very own GitHub ac
 [GitHub](https://www.github.com)
 
 ### kubectl and kubelogin
-To authenticate and run commands against a Kubernetes cluster.
+To authenticate and run commands against a Kubernetes cluster. The tutorial uses Kubernetes version 1.33.
 
 [Install Tools | Kubernetes](https://kubernetes.io/docs/tasks/tools/)
 [Azure/kubelogin: A Kubernetes credential (exec) plugin implementing azure authentication](https://github.com/Azure/kubelogin)
 [How to switch to Azure kubelogin - Aptakube Blog](https://aptakube.com/blog/how-to-use-azure-kubelogin)
+
+### Additional Tools (Optional but Recommended)
+
+#### Python
+Python 3.13 or higher for running automation scripts and understanding the sample application.
+[Python Downloads](https://www.python.org/downloads/)
+
+#### Checkov
+Static analysis tool for infrastructure as code security scanning.
+```bash
+pip install checkov==3.2.4
+```
+
+#### tfsec
+Security scanner for Terraform code.
+```bash
+# macOS
+brew install tfsec
+
+# Or download from GitHub releases
+# https://github.com/aquasecurity/tfsec/releases
+```
+
+#### terraform-docs
+Generate documentation from Terraform modules.
+```bash
+# macOS
+brew install terraform-docs
+
+# Or download from GitHub releases
+# https://github.com/terraform-docs/terraform-docs/releases
+```

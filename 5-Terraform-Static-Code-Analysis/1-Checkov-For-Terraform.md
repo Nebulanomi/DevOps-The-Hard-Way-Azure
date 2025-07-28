@@ -16,13 +16,13 @@ In this lab, you'll learn how to use Checkov, a leading open-source static/secur
 1. **Install Checkov**
    Run one of the following commands:
    ```bash
-   pip install checkov
+   pip install checkov==3.2.4
    ```
 
     OR
     
     ```bash
-    pip3 install checkov
+    pip3 install checkov==3.2.4
     ```
 
 2. **Run Checkov**
