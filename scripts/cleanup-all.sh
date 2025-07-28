@@ -66,44 +66,8 @@ else
 fi
 echo ""
 
-print_step "2" "Destroying Terraform Infrastructure"
-
-# Destroy AKS cluster first (longest running)
-if [ -d "../2-Terraform-AZURE-Services-Creation/4-aks" ]; then
-    echo -e "${YELLOW}📋 Destroying AKS cluster...${NC}"
-    cd "../2-Terraform-AZURE-Services-Creation/4-aks"
-    terraform destroy -auto-approve || echo -e "${YELLOW}⚠️  AKS destroy completed with warnings${NC}"
-    cd ../../scripts
-fi
-
-# Destroy Log Analytics
-if [ -d "../2-Terraform-AZURE-Services-Creation/3-log-analytics" ]; then
-    echo -e "${YELLOW}📋 Destroying Log Analytics...${NC}"
-    cd "../2-Terraform-AZURE-Services-Creation/3-log-analytics"
-    terraform destroy -auto-approve || echo -e "${YELLOW}⚠️  Log Analytics destroy completed with warnings${NC}"
-    cd ../../scripts
-fi
-
-# Destroy VNET
-if [ -d "../2-Terraform-AZURE-Services-Creation/2-vnet" ]; then
-    echo -e "${YELLOW}📋 Destroying Virtual Network...${NC}"
-    cd "../2-Terraform-AZURE-Services-Creation/2-vnet"
-    terraform destroy -auto-approve || echo -e "${YELLOW}⚠️  VNET destroy completed with warnings${NC}"
-    cd ../../scripts
-fi
-
-# Destroy ACR
-if [ -d "../2-Terraform-AZURE-Services-Creation/1-acr" ]; then
-    echo -e "${YELLOW}📋 Destroying Container Registry...${NC}"
-    cd "../2-Terraform-AZURE-Services-Creation/1-acr"
-    terraform destroy -auto-approve || echo -e "${YELLOW}⚠️  ACR destroy completed with warnings${NC}"
-    cd ../../scripts
-fi
-
-echo -e "${GREEN}✅ Terraform infrastructure destroyed${NC}"
-echo ""
-
-print_step "3" "Cleaning up Resource Groups"
+print_step "2" "Cleaning up Resource Groups (All Infrastructure)"
+echo -e "${BLUE}ℹ️  Deleting resource groups will remove ALL resources including Terraform-managed infrastructure${NC}"
 echo -e "${YELLOW}📋 Deleting main resource group...${NC}"
 az group delete --name "$RESOURCE_GROUP" --yes --no-wait 2>/dev/null || echo -e "${YELLOW}⚠️  Resource group may not exist${NC}"
 
@@ -112,7 +76,24 @@ az group delete --name "${PROJECT_NAME}-node-rg" --yes --no-wait 2>/dev/null || 
 
 echo ""
 
-print_step "4" "Cleaning up Terraform State (Optional)"
+print_step "3" "Cleaning up Terraform State Files (Optional)"
+echo -e "${YELLOW}⚠️  Do you want to clean up local Terraform state files?${NC}"
+echo -e "${YELLOW}This will remove .terraform directories and state files from all modules${NC}"
+read -p "Clean up Terraform state files locally? (y/N): " clean_tf_state
+
+if [[ "$clean_tf_state" =~ ^[Yy]$ ]]; then
+    echo -e "${YELLOW}📋 Cleaning up Terraform state files...${NC}"
+    find ../2-Terraform-AZURE-Services-Creation -name ".terraform" -type d -exec rm -rf {} + 2>/dev/null || true
+    find ../2-Terraform-AZURE-Services-Creation -name "terraform.tfstate*" -type f -delete 2>/dev/null || true
+    find ../2-Terraform-AZURE-Services-Creation -name "tfplan" -type f -delete 2>/dev/null || true
+    echo -e "${GREEN}✅ Local Terraform state files cleaned up${NC}"
+else
+    echo -e "${BLUE}ℹ️  Local Terraform state files preserved${NC}"
+fi
+
+echo ""
+
+print_step "4" "Cleaning up Terraform Remote State Storage (Optional)"
 echo -e "${YELLOW}⚠️  Do you want to delete the Terraform state storage as well?${NC}"
 echo -e "${YELLOW}This will remove: ${TERRAFORM_RG} resource group and ${PROJECT_NAME}tfstate storage account${NC}"
 read -p "Delete Terraform state storage? (y/N): " delete_state
@@ -148,11 +129,16 @@ echo ""
 echo -e "${BLUE}📋 What was cleaned up:${NC}"
 echo "• Kubernetes deployments, services, and namespaces"
 echo "• ALB Controller and Gateway resources"
-echo "• AKS cluster and all associated resources"
-echo "• Virtual Network and subnets"
-echo "• Log Analytics workspace"
-echo "• Azure Container Registry"
+echo "• ALL Azure resources via resource group deletion:"
+echo "  - AKS cluster and all associated resources"
+echo "  - Virtual Network and subnets"
+echo "  - Log Analytics workspace"
+echo "  - Azure Container Registry"
+echo "  - Load balancers, public IPs, and networking"
 echo "• Resource groups (deletion in progress)"
+if [[ "$clean_tf_state" =~ ^[Yy]$ ]]; then
+    echo "• Local Terraform state files and directories"
+fi
 if [[ "$delete_state" =~ ^[Yy]$ ]]; then
     echo "• Terraform state storage (deletion in progress)"
 fi
@@ -164,8 +150,10 @@ echo ""
 echo -e "${BLUE}📋 Notes:${NC}"
 echo "• Resource group deletions are running in the background"
 echo "• It may take 10-15 minutes for all resources to be fully removed"
+echo "• Deleting resource groups is faster than individual Terraform destroys"
 echo "• Check Azure Portal to confirm all resources are deleted"
 echo "• Azure AD groups and service principals may need manual cleanup"
+echo "• Terraform state files preserved locally unless you chose to clean them"
 
 echo ""
 echo -e "${GREEN}🎉 DevOps The Hard Way - Azure cleanup completed!${NC}"
