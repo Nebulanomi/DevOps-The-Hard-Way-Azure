@@ -19,7 +19,7 @@ All notable changes to this project will be documented in this file.
 - **Python base image**: Updated from 3.12-slim to 3.13-slim
 - **Flask**: Updated from 2.3.3 to 3.0.3
 - **Werkzeug**: Updated from 2.3.8 to 3.0.4
-- **ALB Controller**: Updated from 1.0.0 to 1.1.2
+- **ALB Controller**: Updated from 1.0.0 to 1.7.9
 - **tfsec GitHub Action**: Updated from v1.2.0 to v1.3.0
 - **terraform-docs GitHub Action**: Updated from @main to v1.3.0
 - **Checkov**: Pinned to specific version 3.2.4 for consistency

@@ -27,7 +27,7 @@ This document summarizes all the major updates made to the DevOps The Hard Way A
 - **DNS Configuration**: Added proper DNS service IP and service CIDR
 
 ### 🔧 Tool Updates
-- **ALB Controller**: Updated from 1.0.0 to 1.1.2
+- **ALB Controller**: Updated from 1.0.0 to 1.7.9
 - **tfsec**: Updated GitHub Action from v1.2.0 to v1.3.0
 - **terraform-docs**: Updated from @main to v1.3.0
 - **Checkov**: Pinned to version 3.2.4
@@ -94,7 +94,7 @@ This document summarizes all the major updates made to the DevOps The Hard Way A
 
 ### CI/CD & Automation
 - `.github/workflows/main.yml` - Updated GitHub Actions
-- `4-kubernetes_manifest/scripts/1-alb-controller-install-k8s.sh` - ALB Controller 1.1.2
+- `4-kubernetes_manifest/scripts/1-alb-controller-install-k8s.sh` - ALB Controller 1.7.9
 
 ### Documentation
 - `README.md` - Enhanced with version information
