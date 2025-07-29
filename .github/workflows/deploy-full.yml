@@ -1,22 +1,6 @@
 name: Deploy DevOps The Hard Way - Azure
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '2-Terraform-AZURE-Services-Creation/**'
-      - '3-Docker/**'
-      - '4-kubernetes_manifest/**'
-      - '.github/workflows/deploy-full.yml'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - '2-Terraform-AZURE-Services-Creation/**'
-      - '3-Docker/**'
-      - '4-kubernetes_manifest/**'
-      - '.github/workflows/deploy-full.yml'
   workflow_dispatch:
     inputs:
       environment:
