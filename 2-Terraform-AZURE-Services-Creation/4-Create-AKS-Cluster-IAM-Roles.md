@@ -71,18 +71,12 @@ After creating the AKS cluster and IAM roles, consider these questions:
 
 ## 💡 Pro Tips
 
-1. **Migration from Existing Clusters**: If upgrading from a previous version of this tutorial:
-   - Kubernetes 1.33 requires a cluster upgrade procedure
-   - Azure RBAC is now enabled by default for enhanced security
-   - Auto-scaling may affect your cost structure but improves efficiency
-   - Network policies may require reviewing existing pod communication patterns
-
-2. **Security Best Practices**: 
+1. **Security Best Practices**: 
    - Enable Azure Policy for Kubernetes to enforce organisational standards and assess compliance at scale
    - Regularly review and audit RBAC permissions
    - Monitor cluster logs through the integrated Log Analytics workspace
 
-3. **Cost Optimization**:
+2. **Cost Optimisation**:
    - Auto-scaling will automatically adjust node count based on demand
    - Use spot instances for non-critical workloads to reduce costs
    - Monitor resource usage through Azure Monitor

@@ -23,7 +23,7 @@ In this lab, you'll create and understand the Kubernetes manifest for deploying 
 
 3. **Update the Image URL and Review Enhanced Features**
    Open `deployment.yml` and:
-   - [ ] Update line 24 with your ACR image URL (using tag v2 for the latest version)
+   - [ ] Update line 24 with your ACR image URL
    - [ ] Review the health checks (liveness and readiness probes) for improved reliability
    - [ ] Note the enhanced resource limits for better performance
    - [ ] Understand the container port configuration

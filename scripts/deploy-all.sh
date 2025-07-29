@@ -137,13 +137,12 @@ terraform apply tfplan
 
 # Get AKS credentials
 echo -e "${YELLOW}📋 Getting AKS credentials...${NC}"
-az aks get-credentials --resource-group "$RESOURCE_GROUP" --name "${PROJECT_NAME}aks" --overwrite-existing
-cd ../../scripts
+az aks get-credentials --resource-group "$RESOURCE_GROUP" --name "${PROJECT_NAME}aks" --overwrite-existing --admin
 echo ""
 
 # Step 5: Build and Push Docker Image
 print_step "8" "Building and Pushing Docker Image"
-cd "../3-Docker"
+cd "3-Docker"
 
 echo -e "${YELLOW}📋 Building Docker image for AMD64 platform...${NC}"
 docker build --platform linux/amd64 -t "${PROJECT_NAME}azurecr.azurecr.io/thomasthorntoncloud:v2" .
@@ -153,12 +152,12 @@ az acr login --name "${PROJECT_NAME}azurecr"
 
 echo -e "${YELLOW}📋 Pushing image to ACR...${NC}"
 docker push "${PROJECT_NAME}azurecr.azurecr.io/thomasthorntoncloud:v2"
-cd ../scripts
+cd ..
 echo ""
 
 # Step 6: Deploy Kubernetes Resources
 print_step "9" "Deploying Application to Kubernetes"
-cd "../4-kubernetes_manifest"
+cd "4-kubernetes_manifest"
 
 echo -e "${YELLOW}📋 Deploying application manifest...${NC}"
 kubectl apply -f deployment.yml
@@ -177,7 +176,7 @@ chmod +x scripts/2-gateway-api-resources.sh
 echo -e "${YELLOW}📋 Waiting for application to be ready...${NC}"
 kubectl wait --for=condition=available --timeout=300s deployment/thomasthornton -n thomasthorntoncloud
 
-cd ../scripts
+cd ..
 echo ""
 
 # Step 7: Get Application URL

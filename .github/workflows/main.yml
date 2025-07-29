@@ -70,8 +70,7 @@ jobs:
         commit_message: "Terraform fmt"
         file_pattern: "*.tf *.tfvars"
         commit_user_name: "github-actions[bot]"
-        commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
-
+  
     - name: Terraform Plan
       run: terraform plan -no-color -input=false
       working-directory: ./2-Terraform-AZURE-Services-Creation/4-aks

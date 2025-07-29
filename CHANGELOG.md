@@ -55,18 +55,5 @@ All notable changes to this project will be documented in this file.
 - Improved setup instructions with latest tool versions
 - Added comprehensive changelog for tracking changes
 
-### Breaking Changes
-- Kubernetes 1.33 may require cluster upgrade procedures
-- Azure RBAC enabled by default (was previously disabled)
-- Network policies now enabled, may affect existing pod communications
-- Updated image tags require rebuilding and redeploying containers
-
-### Migration Notes
-- Update your local Terraform installation to v1.9.8 or higher
-- Verify Kubernetes 1.33 compatibility with your workloads
-- Review Azure RBAC permissions when upgrading existing clusters
-- Test network policies with your current pod communication patterns
-- Rebuild Docker images with updated Python 3.13 base image
-
 ## Previous Versions
 - Initial release with Kubernetes 1.32, Terraform 1.11.0, and Python 3.12
