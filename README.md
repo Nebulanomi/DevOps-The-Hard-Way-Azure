@@ -83,6 +83,8 @@ Before you start, ensure you have the following [prerequisites](https://github.c
 
 5. **CICD** - Automatically update AKS cluster with CICD using GitHub Actions
     - [ ] [Create a GitHub Actions CICD pipeline](https://github.com/thomast1906/DevOps-The-Hard-Way-Azure/blob/main/2-Terraform-AZURE-Services-Creation/5-Run-CICD-For-AKS-Cluster.md)
+    
+    ⚠️ **Note**: The GitHub Actions workflows in this repository are **tutorial content only** and are disabled to prevent accidental runs. To use them, copy this repository to your own account and follow the instructions in the tutorial.
 
 6. **Terraform Documentation** - Automate Terraform documentation generation
     - [ ] [Set Up Terraform-docs with GitHub Actions](https://github.com/thomast1906/DevOps-The-Hard-Way-Azure/blob/main/6-Terraform-Docs/1-Setup-Terraform-Docs.md)

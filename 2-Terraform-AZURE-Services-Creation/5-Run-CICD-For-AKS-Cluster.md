@@ -67,19 +67,50 @@ In this lab, you'll learn how to create an Azure Kubernetes Service (AKS) cluste
    Note: All three values will be automatically displayed in the output of the `5-create-github-oidc.sh` script, so you can copy them directly from there.
 
 4. **Set Up GitHub Actions Workflow**
-   - Navigate to the Actions tab in your GitHub repository.
-   - Select the existing `CI` workflow.
-   - Choose to run the workflow from the main branch.
+
+   ⚠️ **Important**: The workflow file `.github/workflows/main.yml` in this repository is **tutorial content only** and is disabled to prevent accidental runs.
+   
+   **To use this workflow in your own project:**
+   
+   a) **Copy the Repository**: 
+      - Fork this repository to your own GitHub account, or
+      - Copy the workflow file to your own repository
+   
+   b) **Enable the Workflow**:
+      - Open `.github/workflows/main.yml` in your repository
+      - Remove the `tutorial_mode` input and the tutorial job
+      - Change the `on:` section to:
+        ```yaml
+        on:
+          push:
+            branches:
+              - main
+          pull_request:
+            branches:
+              - main
+          workflow_dispatch:
+        ```
+   
+   c) **Customize for Your Environment**:
+      - Update the `terraform.tfvars` values in the workflow
+      - Update resource group names and storage account names
+      - Modify the backend configuration to match your setup
+   
+   d) **Run the Workflow**:
+      - Navigate to the Actions tab in your GitHub repository
+      - Select the `Terraform-Deploy` workflow
+      - Choose to run the workflow manually or trigger via push/PR
 
 ## 🔍 Verification
-After running the workflow:
-1. Check the GitHub Actions logs for successful completion.
+**Note**: Since the workflow in this tutorial repository is disabled, these verification steps apply when you run the workflow in your own repository:
+
+1. Check the GitHub Actions logs in your repository for successful completion.
 2. Log into the [Azure Portal](https://portal.azure.com)
 3. Navigate to Kubernetes services
 4. Verify that your new AKS cluster has been updated or created.
 
 ### 🧠 Knowledge Check
-The GitHub Actions workflow:
+The GitHub Actions workflow (when enabled in your own repository):
 - [ ] Triggers manually (`workflow_dispatch`) or on pull requests/pushes to main
 - [ ] Checks out the code
 - [ ] Authenticates with Azure using OIDC (no secrets stored in GitHub)

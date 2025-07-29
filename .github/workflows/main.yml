@@ -1,18 +1,50 @@
-name: Terrform-Deploy
+# TUTORIAL WORKFLOW - NOT ACTIVE
+# This workflow is part of the DevOps The Hard Way tutorial content
+# It is disabled to prevent accidental runs in the tutorial repository
+# Copy this to their own repositories and modify as needed
 
+name: Terraform-Deploy (Tutorial Example)
+
+# This workflow only runs manually and is intended as tutorial content
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      tutorial_mode:
+        description: 'This is a tutorial workflow - copy to your own repo to use'
+        required: true
+        default: 'tutorial-only'
+        type: choice
+        options:
+          - tutorial-only
 
 jobs:
-  terraform:
-    name: Terrform-Deploy
+  tutorial-info:
+    name: ⚠️ Tutorial Workflow Information
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.tutorial_mode == 'tutorial-only' }}
+    
+    steps:
+    - name: Tutorial Information
+      run: |
+        echo "🎓 This is a TUTORIAL workflow from DevOps The Hard Way - Azure"
+        echo ""
+        echo "📋 This workflow is provided as example content for learning purposes."
+        echo "📋 It is not intended to run in the tutorial repository."
+        echo ""
+        echo "✅ To use this workflow:"
+        echo "1. Copy this repository to your own GitHub account"
+        echo "2. Set up Azure OIDC authentication secrets"
+        echo "3. Modify the workflow for your specific needs"
+        echo "4. Update the terraform.tfvars and backend configuration"
+        echo ""
+        echo "📚 For full instructions, see the tutorial documentation."
+        echo ""
+        echo "❌ This workflow will not deploy any resources in tutorial mode."
+
+  terraform:
+    name: Terraform-Deploy
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.tutorial_mode != 'tutorial-only' }}
     permissions:
       contents: write
       id-token: write  # Required for OIDC
