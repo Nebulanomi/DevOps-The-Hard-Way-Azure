@@ -1,6 +1,6 @@
 # 📄 Create The Kubernetes Manifest
 
-> **Difficulty Level:** 🟡 **Intermediate** | **Estimated Time:** ⏱️ **20-25 minutes**
+> **Estimated Time:** ⏱️ **20-25 minutes**
 
 ## 🎯 **Learning Objectives**
 

@@ -1,7 +1,6 @@
 # Create An AKS Cluster and IAM Roles
 
-## 🎯 **Tutorial Overview**
-**Difficulty:** 🟡 **Intermediate**  
+## 🎯 **Tutorial Overview*
 **Estimated Time:** ⏱️ **25-35 minutes**  
 **Prerequisites Level:** Kubernetes and Azure IAM knowledge required
 
