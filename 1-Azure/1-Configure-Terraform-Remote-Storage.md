@@ -1,6 +1,6 @@
 # 🗄️ Configure Storage Account for Terraform State File
 
-> **Difficulty Level:** 🟢 **Beginner** | **Estimated Time:** ⏱️ **10-15 minutes**
+> **Estimated Time:** ⏱️ **10-15 minutes**
 
 ## 🎯 **Learning Objectives**
 

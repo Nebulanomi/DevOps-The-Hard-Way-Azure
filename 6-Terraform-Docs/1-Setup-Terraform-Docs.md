@@ -1,6 +1,6 @@
 # 📖 Set Up Terraform-docs with GitHub Actions
 
-> **Difficulty Level:** 🟢 **Beginner** | **Estimated Time:** ⏱️ **20-25 minutes**
+> **Estimated Time:** ⏱️ **20-25 minutes**
 
 ## 🎯 **Learning Objectives**
 

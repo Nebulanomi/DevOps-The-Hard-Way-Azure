@@ -1,6 +1,6 @@
 # 👥 Create Azure AD Group for AKS Admins
 
-> **Difficulty Level:** 🟢 **Beginner** | **Estimated Time:** ⏱️ **8-12 minutes**
+> **Estimated Time:** ⏱️ **8-12 minutes**
 
 ## 🎯 **Learning Objectives**
 

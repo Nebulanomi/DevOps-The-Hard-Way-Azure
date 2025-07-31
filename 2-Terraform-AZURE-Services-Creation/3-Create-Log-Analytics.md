@@ -1,6 +1,6 @@
 # 📊 Create an Azure Log Analytics Workspace
 
-> **Difficulty Level:** 🟢 **Beginner** | **Estimated Time:** ⏱️ **15-20 minutes**
+> **Estimated Time:** ⏱️ **15-20 minutes**
 
 ## 🎯 **Learning Objectives**
 

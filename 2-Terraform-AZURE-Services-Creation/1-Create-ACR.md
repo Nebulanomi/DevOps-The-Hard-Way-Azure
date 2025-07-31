@@ -1,7 +1,6 @@
 # Create an Azure Container Registry Repository
 
 ## 🎯 **Tutorial Overview**
-**Difficulty:** 🟢 **Beginner**  
 **Estimated Time:** ⏱️ **15-20 minutes**  
 **Prerequisites Level:** Basic Azure and Terraform knowledge
 

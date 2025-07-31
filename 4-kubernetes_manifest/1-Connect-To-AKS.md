@@ -1,6 +1,6 @@
 # 🔗 Connecting To Azure Kubernetes Service (AKS)
 
-> **Difficulty Level:** 🟢 **Beginner** | **Estimated Time:** ⏱️ **10-15 minutes**
+> **Estimated Time:** ⏱️ **10-15 minutes**
 
 ## 🎯 **Learning Objectives**
 

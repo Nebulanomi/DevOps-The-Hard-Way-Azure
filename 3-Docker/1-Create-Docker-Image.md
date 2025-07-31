@@ -1,7 +1,6 @@
 # Creating the Docker Image for the Thomasthornton.cloud App
 
 ## 🎯 **Tutorial Overview**
-**Difficulty:** 🟢 **Beginner**  
 **Estimated Time:** ⏱️ **15-20 minutes**  
 **Prerequisites Level:** Basic Docker knowledge helpful
 

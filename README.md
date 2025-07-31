@@ -7,7 +7,6 @@ Welcome to the **most comprehensive DevOps tutorial series** for Microsoft Azure
 ## 🌟 **What Makes This Special?**
 
 ### 📚 **Interactive Learning Experience**
-- **🎯 Difficulty-coded tutorials** (🟢 Beginner, 🟡 Intermediate, 🔴 Advanced)
 - **⏱️ Realistic time estimates** for effective learning planning
 - **✅ Step-by-step validation** with automated testing scripts
 - **🚨 Comprehensive troubleshooting** for independent problem-solving
@@ -46,16 +45,16 @@ Transform the **thomasthornton.cloud** application from legacy infrastructure to
 
 ## 🛠️ **Technology Stack - Latest Versions**
 
-| Technology | Purpose | Version | Difficulty |
-|------------|---------|---------|------------|
-| **Azure** | Cloud platform & services | Latest | 🟢 |
-| **Terraform** | Infrastructure as Code | v1.9.8+ | 🟡 |
-| **Docker** | Containerization | Latest | 🟡 |
-| **Kubernetes (AKS)** | Container orchestration | v1.33 | 🟡 |
-| **Python** | Application runtime | v3.13 | 🟢 |
-| **GitHub Actions** | CI/CD automation | Latest | 🟡 |
-| **Checkov** | Security scanning | v3.2.4+ | 🟢 |
-| **Terraform-docs** | Documentation automation | Latest | 🟢 |
+| Technology | Purpose | Version |
+|------------|---------|---------|
+| **Azure** | Cloud platform & services | Latest |
+| **Terraform** | Infrastructure as Code | v1.9.8+ |
+| **Docker** | Containerization | Latest |
+| **Kubernetes (AKS)** | Container orchestration | v1.33 |
+| **Python** | Application runtime | v3.13 |
+| **GitHub Actions** | CI/CD automation | Latest |
+| **Checkov** | Security scanning | v3.2.4+ |
+| **Terraform-docs** | Documentation automation | Latest |
 
 ## 📚 **Interactive Learning Journey**
 
@@ -66,58 +65,58 @@ Transform the **thomasthornton.cloud** application from legacy infrastructure to
 **Essential prerequisites for all subsequent tutorials:**
 
 - [ ] **[Prerequisites Guide](prerequisites.md)** - Complete setup checklist
-- [ ] **[Configure Terraform Remote Storage](1-Azure/1-Configure-Terraform-Remote-Storage.md)** 🟢 *(10-15 min)*
+- [ ] **[Configure Terraform Remote Storage](1-Azure/1-Configure-Terraform-Remote-Storage.md)** *(10-15 min)*
   - Secure state management for team collaboration
-- [ ] **[Create Azure AD Group for AKS Admins](1-Azure/2-Create-Azure-AD-Group-AKS-Admins.md)** 🟢 *(8-12 min)*
+- [ ] **[Create Azure AD Group for AKS Admins](1-Azure/2-Create-Azure-AD-Group-AKS-Admins.md)** *(8-12 min)*
   - Identity management and RBAC foundation
 
 ### 🏗️ **Infrastructure as Code** | **⏱️ 80-120 minutes**
 
 **Build production-ready Azure infrastructure with Terraform:**
 
-- [ ] **[Create Azure Container Registry (ACR)](2-Terraform-AZURE-Services-Creation/1-Create-ACR.md)** 🟢 *(15-20 min)*
+- [ ] **[Create Azure Container Registry (ACR)](2-Terraform-AZURE-Services-Creation/1-Create-ACR.md)** *(15-20 min)*
   - Secure container image storage with premium features
-- [ ] **[Create Azure Virtual Network (VNET)](2-Terraform-AZURE-Services-Creation/2-Create-VNET.md)** 🟡 *(25-30 min)*
+- [ ] **[Create Azure Virtual Network (VNET)](2-Terraform-AZURE-Services-Creation/2-Create-VNET.md)** *(25-30 min)*
   - Network segmentation with NSGs and load balancing
-- [ ] **[Create Log Analytics Workspace](2-Terraform-AZURE-Services-Creation/3-Create-Log-Analytics.md)** 🟢 *(15-20 min)*
+- [ ] **[Create Log Analytics Workspace](2-Terraform-AZURE-Services-Creation/3-Create-Log-Analytics.md)** *(15-20 min)*
   - Centralized monitoring and container insights
-- [ ] **[Create AKS Cluster with IAM Roles](2-Terraform-AZURE-Services-Creation/4-Create-AKS-Cluster-IAM-Roles.md)** 🟡 *(25-35 min)*
+- [ ] **[Create AKS Cluster with IAM Roles](2-Terraform-AZURE-Services-Creation/4-Create-AKS-Cluster-IAM-Roles.md)** *(25-35 min)*
   - Production-ready Kubernetes with auto-scaling and Azure AD integration
 
 ### 🐳 **Containerization** | **⏱️ 40-50 minutes**
 
 **Transform applications into portable, scalable containers:**
 
-- [ ] **[Create Docker Image](3-Docker/1-Create-Docker-Image.md)** 🟡 *(20-25 min)*
+- [ ] **[Create Docker Image](3-Docker/1-Create-Docker-Image.md)** *(20-25 min)*
   - Multi-stage builds with security best practices
-- [ ] **[Push Image to ACR](3-Docker/2-Push%20Image%20To%20ACR.md)** 🟡 *(20-25 min)*
+- [ ] **[Push Image to ACR](3-Docker/2-Push%20Image%20To%20ACR.md)** *(20-25 min)*
   - Secure image distribution and vulnerability scanning
 
 ### ☸️ **Kubernetes Deployment** | **⏱️ 50-70 minutes**
 
 **Deploy and manage applications in production Kubernetes:**
 
-- [ ] **[Connect to AKS](4-kubernetes_manifest/1-Connect-To-AKS.md)** 🟢 *(10-15 min)*
+- [ ] **[Connect to AKS](4-kubernetes_manifest/1-Connect-To-AKS.md)** *(10-15 min)*
   - Cluster authentication and kubectl configuration
-- [ ] **[Create Kubernetes Manifest](4-kubernetes_manifest/2-Create-Kubernetes-Manifest.md)** 🟡 *(20-25 min)*
+- [ ] **[Create Kubernetes Manifest](4-kubernetes_manifest/2-Create-Kubernetes-Manifest.md)** *(20-25 min)*
   - Production-ready deployments with health checks
-- [ ] **[Deploy Application to AKS](4-kubernetes_manifest/3-Deploy-Thomasthorntoncloud-App.md)** 🟡 *(20-30 min)*
+- [ ] **[Deploy Application to AKS](4-kubernetes_manifest/3-Deploy-Thomasthorntoncloud-App.md)** *(20-30 min)*
   - Live application deployment with monitoring
 
 ### 🔒 **Security & Quality Assurance** | **⏱️ 15-20 minutes**
 
 **Implement security scanning and compliance:**
 
-- [ ] **[Checkov Security Scanning](5-Terraform-Static-Code-Analysis/1-Checkov-For-Terraform.md)** 🟢 *(15-20 min)*
+- [ ] **[Checkov Security Scanning](5-Terraform-Static-Code-Analysis/1-Checkov-For-Terraform.md)** *(15-20 min)*
   - Automated infrastructure security analysis
 
 ### 🚀 **Automation & CI/CD** | **⏱️ 40-50 minutes**
 
 **Implement continuous integration and deployment:**
 
-- [ ] **[GitHub Actions CI/CD Pipeline](2-Terraform-AZURE-Services-Creation/5-Run-CICD-For-AKS-Cluster.md)** 🟡 *(25-35 min)*
+- [ ] **[GitHub Actions CI/CD Pipeline](2-Terraform-AZURE-Services-Creation/5-Run-CICD-For-AKS-Cluster.md)** *(25-35 min)*
   - Automated testing, building, and deployment
-- [ ] **[Terraform Documentation Automation](6-Terraform-Docs/1-Setup-Terraform-Docs.md)** 🟢 *(20-25 min)*
+- [ ] **[Terraform Documentation Automation](6-Terraform-Docs/1-Setup-Terraform-Docs.md)** *(20-25 min)*
   - Auto-generated documentation with GitHub Actions
 
 ## 🎓 **Learning Validation & Assessment**

@@ -1,6 +1,6 @@
 # 🌐 Create an Azure VNET
 
-> **Difficulty Level:** | **Estimated Time:** ⏱️ **25-30 minutes**
+> **Estimated Time:** ⏱️ **25-30 minutes**
 
 ## 🎯 **Learning Objectives**
 
