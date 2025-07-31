@@ -206,14 +206,6 @@ This isn't just a tutorial—it's your **complete transformation into a DevOps p
 
 ---
 
-## 📬 **Feedback & Community**
-
-**🙋‍♂️ Questions or Issues?** Open an issue or submit a pull request—your feedback helps improve this learning experience for everyone.
-
-**🌟 Found this valuable?** Star the repository and share with your network to help others discover this comprehensive DevOps learning platform.
-
-**Ready to become a DevOps expert? Let's build the future together!** 🚀✨
-
 ### Main Sections
 
 1. **Terraform** - Create all the Azure cloud services needed to run the thomasthornton.cloud application.
@@ -271,3 +263,11 @@ By completing this tutorial, you'll:
 Are you ready to embark on this DevOps journey? Let's turn that monolithic infrastructure into a lean, mean, deploying machine! 💪🚀 📣 
 
 I value your feedback! If you find any issues or have suggestions for improvement, please open an issue or submit a pull request.
+
+## 📬 **Feedback & Community**
+
+**🙋‍♂️ Questions or Issues?** Open an issue or submit a pull request—your feedback helps improve this learning experience for everyone.
+
+**🌟 Found this valuable?** Star the repository and share with your network to help others discover this comprehensive DevOps learning platform.
+
+**Ready to become a DevOps expert? Let's build the future together!** 🚀✨
