@@ -1,0 +1,397 @@
+name: Deploy DevOps The Hard Way - Azure
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+      destroy_after_deploy:
+        description: 'Destroy resources after deployment (for testing)'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  PROJECT_NAME: ${{ github.event.inputs.environment || 'devopsthehardway' }}
+  LOCATION: "uksouth"
+  ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+  ARM_USE_OIDC: true
+
+jobs:
+  deploy:
+    name: 🚀 Deploy Infrastructure and Application
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🔐 Azure Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_AD_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_AD_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: 🏗️ Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.9.8
+        terraform_wrapper: false
+
+    - name: 🐳 Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: ☸️ Setup kubectl
+      uses: azure/setup-kubectl@v4
+      with:
+        version: 'latest'
+
+    - name: ⚙️ Setup Helm
+      uses: azure/setup-helm@v4
+      with:
+        version: 'latest'
+
+    - name: 🏗️ Create Terraform State Storage
+      run: |
+        TERRAFORM_RG="${PROJECT_NAME}-terraform-rg"
+        STORAGE_ACCOUNT="${PROJECT_NAME}tfstate"
+        
+        # Create resource group for terraform state
+        az group create --name "$TERRAFORM_RG" --location "$LOCATION"
+        
+        # Create storage account
+        az storage account create \
+          --name "$STORAGE_ACCOUNT" \
+          --resource-group "$TERRAFORM_RG" \
+          --location "$LOCATION" \
+          --sku Standard_LRS \
+          --encryption-services blob
+        
+        # Create storage container
+        az storage container create \
+          --name tfstate \
+          --account-name "$STORAGE_ACCOUNT"
+
+    - name: 🏗️ Create Azure AD Group for AKS
+      run: |
+        GROUP_NAME="AKS-Admins-${PROJECT_NAME}"
+        
+        # Check if group exists
+        GROUP_ID=$(az ad group list --filter "displayName eq '${GROUP_NAME}'" --query "[0].id" -o tsv)
+        
+        if [ -z "$GROUP_ID" ] || [ "$GROUP_ID" = "null" ]; then
+          echo "Creating new AD group: $GROUP_NAME"
+          GROUP_ID=$(az ad group create \
+            --display-name "$GROUP_NAME" \
+            --mail-nickname "aks-admins-${PROJECT_NAME}" \
+            --query id -o tsv)
+        fi
+        
+        echo "AKS_ADMINS_GROUP_ID=$GROUP_ID" >> $GITHUB_ENV
+        echo "Azure AD Group ID: $GROUP_ID"
+
+    - name: 🏗️ Deploy ACR
+      run: |
+        cd 2-Terraform-AZURE-Services-Creation/1-acr
+        
+        # Update terraform.tfvars
+        cat > terraform.tfvars << EOF
+        name     = "$PROJECT_NAME"
+        location = "$LOCATION"
+        
+        tags = {
+          "Purpose"     = "azure-devops-hardway"
+          "Environment" = "${{ github.event.inputs.environment || 'dev' }}"
+          "DeployedBy"  = "GitHub-Actions"
+          "Project"     = "$PROJECT_NAME"
+        }
+        EOF
+        
+        terraform init \
+          -backend-config="resource_group_name=${PROJECT_NAME}-terraform-rg" \
+          -backend-config="storage_account_name=${PROJECT_NAME}tfstate" \
+          -backend-config="container_name=tfstate" \
+          -backend-config="key=acr-terraform.tfstate"
+        
+        terraform plan -out=tfplan
+        terraform apply tfplan
+
+    - name: 🏗️ Deploy VNET
+      run: |
+        cd 2-Terraform-AZURE-Services-Creation/2-vnet
+        
+        # Update terraform.tfvars
+        cat > terraform.tfvars << EOF
+        name                      = "$PROJECT_NAME"
+        location                  = "$LOCATION"
+        network_address_space     = "192.168.0.0/16"
+        aks_subnet_address_name   = "aks"
+        aks_subnet_address_prefix = "192.168.0.0/22"
+        subnet_address_name       = "appgw"
+        subnet_address_prefix     = "192.168.4.0/24"
+        
+        tags = {
+          "Purpose"     = "azure-devops-hardway"
+          "Environment" = "${{ github.event.inputs.environment || 'dev' }}"
+          "DeployedBy"  = "GitHub-Actions"
+          "Project"     = "$PROJECT_NAME"
+        }
+        EOF
+        
+        terraform init \
+          -backend-config="resource_group_name=${PROJECT_NAME}-terraform-rg" \
+          -backend-config="storage_account_name=${PROJECT_NAME}tfstate" \
+          -backend-config="container_name=tfstate" \
+          -backend-config="key=vnet-terraform.tfstate"
+        
+        terraform plan -out=tfplan
+        terraform apply tfplan
+
+    - name: 🏗️ Deploy Log Analytics
+      run: |
+        cd 2-Terraform-AZURE-Services-Creation/3-log-analytics
+        
+        # Update terraform.tfvars
+        cat > terraform.tfvars << EOF
+        name     = "$PROJECT_NAME"
+        location = "$LOCATION"
+        
+        tags = {
+          "Purpose"     = "azure-devops-hardway"
+          "Environment" = "${{ github.event.inputs.environment || 'dev' }}"
+          "DeployedBy"  = "GitHub-Actions"
+          "Project"     = "$PROJECT_NAME"
+        }
+        EOF
+        
+        terraform init \
+          -backend-config="resource_group_name=${PROJECT_NAME}-terraform-rg" \
+          -backend-config="storage_account_name=${PROJECT_NAME}tfstate" \
+          -backend-config="container_name=tfstate" \
+          -backend-config="key=la-terraform.tfstate"
+        
+        terraform plan -out=tfplan
+        terraform apply tfplan
+
+    - name: 🏗️ Deploy AKS Cluster
+      run: |
+        cd 2-Terraform-AZURE-Services-Creation/4-aks
+        
+        # Generate SSH key for AKS
+        ssh-keygen -t rsa -b 4096 -f ~/.ssh/aks_key -N "" -C "github-actions"
+        SSH_PUBLIC_KEY=$(cat ~/.ssh/aks_key.pub)
+        
+        # Update terraform.tfvars
+        cat > terraform.tfvars << EOF
+        name     = "$PROJECT_NAME"
+        location = "$LOCATION"
+        
+        kubernetes_version         = "1.33"
+        agent_count                = 2
+        vm_size                    = "Standard_DS2_v2"
+        ssh_public_key             = "$SSH_PUBLIC_KEY"
+        aks_admins_group_object_id = "$AKS_ADMINS_GROUP_ID"
+        
+        tags = {
+          "Purpose"     = "azure-devops-hardway"
+          "Environment" = "${{ github.event.inputs.environment || 'dev' }}"
+          "DeployedBy"  = "GitHub-Actions"
+          "Project"     = "$PROJECT_NAME"
+        }
+        EOF
+        
+        terraform init \
+          -backend-config="resource_group_name=${PROJECT_NAME}-terraform-rg" \
+          -backend-config="storage_account_name=${PROJECT_NAME}tfstate" \
+          -backend-config="container_name=tfstate" \
+          -backend-config="key=aks-terraform.tfstate"
+        
+        terraform plan -out=tfplan
+        terraform apply tfplan
+        
+        # Get AKS credentials
+        az aks get-credentials \
+          --resource-group "${PROJECT_NAME}-rg" \
+          --name "${PROJECT_NAME}aks" \
+          --overwrite-existing
+
+    - name: 🐳 Build and Push Docker Image
+      run: |
+        cd 3-Docker
+        
+        # Login to ACR
+        az acr login --name "${PROJECT_NAME}azurecr"
+        
+        # Build and push image
+        docker build --platform linux/amd64 \
+          -t "${PROJECT_NAME}azurecr.azurecr.io/thomasthorntoncloud:v2" .
+        
+        docker push "${PROJECT_NAME}azurecr.azurecr.io/thomasthorntoncloud:v2"
+
+    - name: ☸️ Deploy Application to Kubernetes
+      run: |
+        cd 4-kubernetes_manifest
+        
+        # Update deployment.yml with correct image
+        sed -i "s/devopsthehardwayazurecr.azurecr.io/${PROJECT_NAME}azurecr.azurecr.io/g" deployment.yml
+        
+        # Deploy application
+        kubectl apply -f deployment.yml
+        
+        # Wait for deployment to be ready
+        kubectl wait --for=condition=available --timeout=300s deployment/thomasthornton -n thomasthorntoncloud
+
+    - name: 🌐 Install ALB Controller
+      run: |
+        cd 4-kubernetes_manifest
+        
+        # Update script with correct resource names
+        sed -i "s/devopsthehardway-rg/${PROJECT_NAME}-rg/g" scripts/1-alb-controller-install-k8s.sh
+        sed -i "s/devopsthehardwayaks/${PROJECT_NAME}aks/g" scripts/1-alb-controller-install-k8s.sh
+        sed -i "s/devopsthehardway-vnet/${PROJECT_NAME}-vnet/g" scripts/1-alb-controller-install-k8s.sh
+        
+        # Install ALB Controller
+        chmod +x scripts/1-alb-controller-install-k8s.sh
+        ./scripts/1-alb-controller-install-k8s.sh
+        
+        # Wait for ALB Controller to be ready
+        kubectl wait --for=condition=available --timeout=300s deployment/alb-controller -n azure-alb-system
+
+    - name: 🌐 Create Gateway Resources
+      run: |
+        cd 4-kubernetes_manifest
+        
+        # Update script with correct resource names
+        sed -i "s/devopsthehardwayjuly25-rg/${PROJECT_NAME}-rg/g" scripts/2-gateway-api-resources.sh
+        sed -i "s/devopsthehardway-alb/${PROJECT_NAME}-alb/g" scripts/2-gateway-api-resources.sh
+        
+        # Create gateway resources
+        chmod +x scripts/2-gateway-api-resources.sh
+        ./scripts/2-gateway-api-resources.sh
+        
+        # Wait for gateway to get IP
+        sleep 60
+
+    - name: 🧪 Test Application
+      run: |
+        # Get gateway IP
+        GATEWAY_IP=$(kubectl get gateway gateway-01 -n thomasthorntoncloud -o jsonpath='{.status.addresses[0].value}' 2>/dev/null || echo "")
+        
+        if [ -n "$GATEWAY_IP" ]; then
+          echo "🌐 Application URL: http://$GATEWAY_IP"
+          
+          # Test application
+          for i in {1..10}; do
+            if curl -s -f "http://$GATEWAY_IP" > /dev/null; then
+              echo "✅ Application is responding correctly!"
+              break
+            else
+              echo "⏳ Waiting for application to be ready (attempt $i/10)..."
+              sleep 30
+            fi
+          done
+        else
+          echo "⚠️ Gateway IP not yet available"
+          kubectl get gateway gateway-01 -n thomasthorntoncloud -o yaml
+        fi
+
+    - name: 📊 Deployment Summary
+      run: |
+        echo "## 🎉 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📋 Resources Created:" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Azure Container Registry" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Virtual Network with subnets" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Log Analytics workspace" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ AKS cluster with auto-scaling" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Docker image built and pushed" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Application deployed to Kubernetes" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ ALB Controller and Gateway configured" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        GATEWAY_IP=$(kubectl get gateway gateway-01 -n thomasthorntoncloud -o jsonpath='{.status.addresses[0].value}' 2>/dev/null || echo "Pending")
+        echo "### 🌐 Application Access:" >> $GITHUB_STEP_SUMMARY
+        echo "**URL:** http://$GATEWAY_IP" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 🏗️ Project Details:" >> $GITHUB_STEP_SUMMARY
+        echo "- **Project Name:** $PROJECT_NAME" >> $GITHUB_STEP_SUMMARY
+        echo "- **Environment:** ${{ github.event.inputs.environment || 'dev' }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Location:** $LOCATION" >> $GITHUB_STEP_SUMMARY
+        echo "- **Kubernetes Version:** 1.33" >> $GITHUB_STEP_SUMMARY
+
+  cleanup:
+    name: 🗑️ Cleanup Resources (if requested)
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: ${{ github.event.inputs.destroy_after_deploy == 'true' }}
+    permissions:
+      contents: read
+      id-token: write
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🔐 Azure Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_AD_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_AD_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: 🏗️ Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.9.8
+        terraform_wrapper: false
+
+    - name: ☸️ Setup kubectl
+      uses: azure/setup-kubectl@v4
+      with:
+        version: 'latest'
+
+    - name: ⚙️ Setup Helm
+      uses: azure/setup-helm@v4
+      with:
+        version: 'latest'
+
+    - name: 🗑️ Run Cleanup Script
+      run: |
+        # Make cleanup script executable
+        chmod +x scripts/cleanup-all.sh
+        
+        # Set environment variables for cleanup
+        export PROJECT_NAME="${PROJECT_NAME}"
+        export LOCATION="${LOCATION}"
+        
+        # Run cleanup with auto-confirmation
+        echo "DELETE" | ./scripts/cleanup-all.sh
+
+    - name: 📊 Cleanup Summary
+      run: |
+        echo "## 🗑️ Cleanup Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📋 Resources Cleaned Up:" >> $GITHUB_STEP_SUMMARY
+        echo "- 🗑️ Kubernetes deployments and services" >> $GITHUB_STEP_SUMMARY
+        echo "- 🗑️ ALB Controller and Gateway resources" >> $GITHUB_STEP_SUMMARY
+        echo "- 🗑️ AKS cluster and node pools" >> $GITHUB_STEP_SUMMARY
+        echo "- 🗑️ Virtual Network and subnets" >> $GITHUB_STEP_SUMMARY
+        echo "- 🗑️ Log Analytics workspace" >> $GITHUB_STEP_SUMMARY
+        echo "- 🗑️ Azure Container Registry" >> $GITHUB_STEP_SUMMARY
+        echo "- 🗑️ Resource groups (deletion in progress)" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Note:** Resource group deletions are running in the background and may take 10-15 minutes to complete."

@@ -1,58 +1,220 @@
 # Create an Azure Container Registry Repository
 
-## 🎯 Purpose
+## 🎯 **Tutorial Overview**
+**Estimated Time:** ⏱️ **15-20 minutes**  
+**Prerequisites Level:** Basic Azure and Terraform knowledge
+
 In this lab, you'll create a repository in Azure Container Registry (ACR) to store the Docker image for the thomasthornton.cloud app.
+
+### 📋 **Learning Objectives**
+By the end of this tutorial, you will:
+- [ ] Understand Azure Container Registry fundamentals
+- [ ] Create ACR infrastructure using Terraform
+- [ ] Configure Terraform backend for state management
+- [ ] Apply Azure resource tagging best practices
+- [ ] Validate ACR deployment and functionality
+
+### ⚠️ **Important Notes**
+- Ensure your ACR name is globally unique (Azure requirement)
+- Standard SKU provides good balance of features and cost
+- Backend state storage must be configured before running Terraform
 
 ## 🛠️ Create the ACR Terraform Configuration
 
-### Prerequisites
-- [ ] Terraform installed
-- [ ] Azure CLI installed and configured
+### ✅ **Prerequisites Checklist**
+Before starting, ensure you have:
+- [ ] Terraform installed (version 1.9.8 or later)
+- [ ] Azure CLI installed and configured (`az login` completed)
 - [ ] Storage account for Terraform state already created (from 1-Azure section)
 - [ ] Basic understanding of Terraform and ACR concepts
+- [ ] Text editor or IDE for configuration files
 
-## Steps
+### 📚 **Background Knowledge**
+**What is Azure Container Registry?**
+- Private Docker registry service in Azure
+- Stores and manages container images
+- Integrates with Azure Kubernetes Service (AKS)
+- Provides security scanning and access control
 
-1. **Review and Change Terraform .tfvars**
-   - Open the [terraform.tfvars](https://github.com/thomast1906/DevOps-The-Hard-Way-Azure/tree/main/2-Terraform-AZURE-Services-Creation/1-acr/terraform.tfvars) file.
-   - Ensure all values are accurate for your environment and unique.
+## 🚀 **Step-by-Step Implementation**
 
-2. **Understand the Terraform Configuration**
-   Review the [ACR Terraform configuration](https://github.com/thomast1906/DevOps-The-Hard-Way-Azure/tree/main/2-Terraform-AZURE-Services-Creation/1-acr). The configuration will:
-   - [ ] Use a Terraform backend to store the `.tfstate` in an Azure Storage Account
-   - [ ] Use the `uksouth` region (can be changed if desired)
-   - [ ] Create a new Resource Group using `azurerm_resource_group`
-   - [ ] Create a new ACR using `azurerm_container_registry` with Standard SKU
-   - [ ] Apply consistent tagging for better resource management and organization
-
-3. **Create the ACR**
-   Navigate to the 1-acr directory and run the following commands in your terminal:
-   ```bash
-   cd 1-acr
-   terraform init
-   terraform plan
-   terraform apply
+### **Step 1: Review and Customize Configuration** ⏱️ *5 minutes*
+1. **📝 Update Terraform Variables**
+   - Open the [terraform.tfvars](https://github.com/thomast1906/DevOps-The-Hard-Way-Azure/tree/main/2-Terraform-AZURE-Services-Creation/1-acr/terraform.tfvars) file
+   - Ensure all values are accurate for your environment and **globally unique**
+   
+   ```hcl
+   # Example customization
+   name     = "mycompanyacr2024"  # Must be globally unique!
+   location = "uksouth"           # Change if desired
    ```
 
-## 🔍 Verification
-To ensure the ACR was created successfully:
-1. Log into the [Azure Portal](https://portal.azure.com)
-2. Navigate to ACR in the [Azure Portal](https://portal.azure.com/#browse/Microsoft.ContainerRegistry%2Fregistries)
-3. Look for your newly created ACR
-4. Verify its properties match your Terraform configuration
+   **✅ Validation:** Check that your ACR name is unique by running:
+   ```bash
+   az acr check-name --name "your-acr-name"
+   ```
 
-Screenshot of the ACR in the Azure Portal:
+### **Step 2: Understand the Infrastructure** ⏱️ *5 minutes*
+2. **🔍 Review Terraform Configuration**
+   
+   **📚 What this configuration creates:**
+   - [ ] **Resource Group** - Container for all ACR resources
+   - [ ] **Container Registry** - Private Docker image repository
+   - [ ] **Terraform Backend** - Remote state storage in Azure
+   - [ ] **Resource Tags** - Metadata for organization and cost tracking
+   
+   **🎯 Key Features:**
+   - **SKU:** Standard (good balance of features and cost)
+   - **Admin Access:** Enabled for development scenarios
+   - **Location:** UK South (configurable)
+   - **Retention:** Configured for compliance
 
-![](images/1-acr.png)
+   Review the [ACR Terraform configuration](https://github.com/thomast1906/DevOps-The-Hard-Way-Azure/tree/main/2-Terraform-AZURE-Services-Creation/1-acr) to understand:
+   - [ ] Resource definitions and relationships
+   - [ ] Output values for use in other modules
+   - [ ] Variable usage and defaults
 
-## 🧠 Knowledge Check
-After creating the ACR, consider these questions:
+### **Step 3: Deploy the Infrastructure** ⏱️ *10 minutes*
+3. **🏗️ Create the ACR**
+   
+   **📂 Navigate to the configuration directory:**
+   ```bash
+   cd 2-Terraform-AZURE-Services-Creation/1-acr
+   ```
 
-1. Why is it beneficial to use Terraform for creating cloud resources like ACR?
-2. How does storing the Terraform state in Azure Storage Account help in team environments?
-3. What are the advantages of using ACR over other container registry options?
+   **🔧 Initialize Terraform:**
+   ```bash
+   terraform init
+   ```
+   **✅ Expected Result:** Terraform downloads providers and configures backend
 
-## 💡 Pro Tip
+   **📋 Plan the deployment:**
+   ```bash
+   terraform plan
+   ```
+   **✅ Expected Result:** Shows resources to be created (should show ~2-3 resources)
+
+   **🚀 Apply the configuration:**
+   ```bash
+   terraform apply
+   ```
+   **✅ Expected Result:** ACR and resource group created successfully
+
+## ✅ **Validation & Testing**
+
+### **Step 4: Verify Deployment** ⏱️ *5 minutes*
+**🔍 Validate your ACR deployment:**
+
+1. **Azure Portal Verification:**
+   - [ ] Log into the [Azure Portal](https://portal.azure.com)
+   - [ ] Navigate to [Container Registries](https://portal.azure.com/#browse/Microsoft.ContainerRegistry%2Fregistries)
+   - [ ] Locate your newly created ACR
+   - [ ] Verify the following properties:
+     - **Status:** Available
+     - **SKU:** Standard
+     - **Location:** Matches your configuration
+     - **Admin user:** Enabled
+
+2. **Azure CLI Verification:**
+   ```bash
+   # Check ACR exists and is accessible
+   az acr list --query "[?name=='your-acr-name']" --output table
+   
+   # Verify login capability
+   az acr login --name your-acr-name
+   ```
+   **✅ Expected Result:** Login successful message
+
+3. **Terraform State Verification:**
+   ```bash
+   # View created resources
+   terraform show
+   
+   # Check outputs
+   terraform output
+   ```
+
+**📸 Expected Result:**
+![ACR in Azure Portal](images/1-acr.png)
+
+### **� Functionality Test**
+**Test ACR basic functionality:**
+```bash
+# Pull a test image and push to your ACR
+docker pull hello-world
+docker tag hello-world your-acr-name.azurecr.io/hello-world:test
+docker push your-acr-name.azurecr.io/hello-world:test
+```
+
+## 🚨 **Troubleshooting Guide**
+
+### **Common Issues & Solutions**
+
+| ❌ **Problem** | 🔧 **Solution** |
+|----------------|-----------------|
+| ACR name already exists | Choose a globally unique name (try adding numbers/date) |
+| Authentication failed | Run `az login` and verify subscription access |
+| Terraform backend error | Ensure storage account exists and you have access |
+| Permission denied | Verify Azure CLI is logged in with correct permissions |
+| Plan shows no changes | Check if resources already exist or variables are correct |
+
+### **🆘 Detailed Troubleshooting**
+
+**Issue: "ACR name not available"**
+```bash
+# Check name availability
+az acr check-name --name "your-proposed-name"
+
+# Generate unique name
+echo "mycompanyacr$(date +%Y%m%d)"
+```
+
+**Issue: "Backend initialization failed"**
+```bash
+# Verify storage account exists
+az storage account show --name "your-storage-account" --resource-group "your-rg"
+
+# Check access keys
+az storage account keys list --account-name "your-storage-account"
+```
+
+## 🎓 **Knowledge Check Questions**
+
+Test your understanding:
+
+- [ ] **Question 1:** Why is it beneficial to use Terraform for creating cloud resources like ACR?
+  <details>
+  <summary>💡 Answer</summary>
+  Infrastructure as Code provides version control, repeatability, and team collaboration. Changes are tracked, and infrastructure can be recreated consistently.
+  </details>
+
+- [ ] **Question 2:** How does storing Terraform state in Azure Storage help in team environments?
+  <details>
+  <summary>💡 Answer</summary>
+  Remote state allows multiple team members to work on the same infrastructure, provides state locking to prevent conflicts, and ensures state persistence.
+  </details>
+
+- [ ] **Question 3:** What are the advantages of using ACR over public registries?
+  <details>
+  <summary>💡 Answer</summary>
+  Private access control, integration with Azure services, geo-replication, vulnerability scanning, and compliance with corporate policies.
+  </details>
+
+## 🎯 **Achievement Unlocked!**
+🏆 **Container Registry Master** - You've successfully created your first Azure Container Registry using Infrastructure as Code!
+
+### **What You've Accomplished:**
+- [x] Created ACR infrastructure with Terraform
+- [x] Configured remote state management
+- [x] Applied Azure resource tagging
+- [x] Validated deployment functionality
+- [x] Gained troubleshooting skills
+
+### **Next Steps:**
+- [ ] Proceed to [Create VNET](./2-Create-VNET.md)
+- [ ] Learn about [Docker image creation](../3-Docker/1-Create-Docker-Image.md)
+
+## 💡 **Pro Tips & Best Practices**
 Consider implementing these additional security and operational best practices for your ACR:
 
 1. **Enhanced Security**:

@@ -5,7 +5,7 @@ AKS_NAME="devopsthehardwayaks"
 helm_resource_namespace="azure-alb-system"
 VNET_NAME="devopsthehardway-vnet"
 ALB_SUBNET_NAME="appgw"
-ALB_CONTROLLER_VERSION="1.0.0"
+ALB_CONTROLLER_VERSION="1.7.9"
 
 #create namespace
 kubectl create namespace $helm_resource_namespace
