@@ -59,10 +59,37 @@ This prerequisites guide ensures you have everything needed for the **11 interac
    # Verify your Azure permissions
    az role assignment list --assignee $(az account show --query user.name -o tsv) --output table
    
-   # Should see Contributor or Owner role
+   # Should see Owner and Blob Contributor roles
    ```
 
 ## 🛠️ **Required Software Installation**
+
+- I actually do this in a devcontainer in VS Code.
+- For that I open the command pallet and type in "Add dev configuration file".
+- Then selected the Python 3 one which will already install python.
+- Then find the features bellow and add them (Azure CLI, Terraform, etc...).
+- This way we always have a clean container to run our scripts while also having a clean local system.
+
+## Example of how it looks inside the dev container
+
+{
+	"name": "Python 3",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye",
+	"features": {
+		"ghcr.io/devcontainers/features/azure-cli:1": {},
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
+		"ghcr.io/devcontainers/features/terraform:1": {},
+		"ghcr.io/rjfmachado/devcontainer-features/cloud-native:1": {},
+		"ghcr.io/devcontainers-extra/features/checkov:1": {},
+		"ghcr.io/devcontainers-extra/features/terraform-docs:1": {},
+		"ghcr.io/devcontainers-extra/features/tfsec:1": {}
+	}
+
+- After that I open the command pallet and type in "Open in dev container".
+- This will open our project in the dev container that is using the above json.
 
 ### **☁️ Azure CLI - Primary Interface**
 
