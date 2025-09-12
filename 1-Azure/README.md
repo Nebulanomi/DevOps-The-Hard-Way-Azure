@@ -5,6 +5,11 @@ This directory contains the foundational Azure setup needed for the DevOps The H
 
 ## Labs in this Section
 
+### Roles needed over the subscription
+
+- Owner
+- Blob storage contributor
+
 ### [1. Configure Terraform Remote Storage](./1-Configure-Terraform-Remote-Storage.md)
 Set up an Azure Storage Account to securely store your Terraform state files, which is essential for team collaboration and state management.
 
