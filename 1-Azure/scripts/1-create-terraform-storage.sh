@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 # Configuration
-RESOURCE_GROUP_NAME="devopshardway-rg"
-STORAGE_ACCOUNT_NAME="devopshardwaysa"
-LOCATION="uksouth"
+RESOURCE_GROUP_NAME="rg-devopsthehardway"
+STORAGE_ACCOUNT_NAME="sadevopshardwaysa"
+LOCATION="westeurope"
 CONTAINER_NAME="tfstate"
 
 # Error handling function
@@ -30,7 +30,22 @@ if [ "$RESOURCE_GROUP_EXISTS" = "true" ]; then
 else
   # Create Resource Group
   echo "Creating resource group $RESOURCE_GROUP_NAME in $LOCATION..."
-  az group create -l $LOCATION -n $RESOURCE_GROUP_NAME --tags "Purpose=azure-devops-hardway" || handle_error "Failed to create resource group"
+  az group create \
+  -l $LOCATION \
+  -n $RESOURCE_GROUP_NAME \
+  --tags \
+    "Owner"="Alexandre Pereira" \
+    "Secondary Owner"="None" \
+    "Budget"="100€" \
+    "Data Classification"="Private" \
+    "Project Chargeability"="Not chargeable" \
+    "Project End User"="Internal" \
+    "Project Name"="DevOps The Hard Way" \
+    "End Date"="Never" \
+    "Deployed By"="Alexandre Pereira" \
+    "Ticket Id"="None" \
+    "Importance"="Low" \
+  || handle_error "Failed to create resource group"
 fi
 
 # Check if Storage Account exists
@@ -50,19 +65,19 @@ else
     --encryption-services blob \
     --min-tls-version TLS1_2 \
     --allow-blob-public-access false \
-    --tags "Purpose=azure-devops-hardway" || handle_error "Failed to create storage account"
+    --allow-shared-key-access false \
+    --https-only true \
+    --tags "Importance"="Low" \
+  || handle_error "Failed to create storage account"
 
   # Create Storage Account blob container
   echo "Creating blob container $CONTAINER_NAME..."
   az storage container create \
     --name $CONTAINER_NAME \
     --account-name $STORAGE_ACCOUNT_NAME \
-    --auth-mode login || handle_error "Failed to create blob container"
+    --auth-mode login \
+  || handle_error "Failed to create blob container"
 
-  # Output the access key (in a real environment, consider using managed identities instead)
-  echo "Retrieving storage account key..."
-  ACCOUNT_KEY=$(az storage account keys list --resource-group $RESOURCE_GROUP_NAME --account-name $STORAGE_ACCOUNT_NAME --query '[0].value' -o tsv)
-  
   echo "Configuration for terraform backend:"
   echo "terraform {"
   echo "  backend \"azurerm\" {"
@@ -70,6 +85,8 @@ else
   echo "    storage_account_name = \"$STORAGE_ACCOUNT_NAME\""
   echo "    container_name       = \"$CONTAINER_NAME\""
   echo "    key                  = \"terraform.tfstate\""
+  echo ""
+  echo "    use_azuread_auth     = \"true\""
   echo "  }"
   echo "}"
   
