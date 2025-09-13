@@ -66,27 +66,32 @@ This prerequisites guide ensures you have everything needed for the **11 interac
 
 - I actually do this in a devcontainer in VS Code.
 - For that I open the command pallet and type in "Add dev configuration file".
-- Then selected the Python 3 one which will already install python.
+- Then selected the Python 3 bookworm one which will already install python.
 - Then find the features bellow and add them (Azure CLI, Terraform, etc...).
 - This way we always have a clean container to run our scripts while also having a clean local system.
 
-## Example of how it looks inside the dev container
+### Example of how it looks inside the dev container
 
+```yaml
 {
 	"name": "Python 3",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye",
 	"features": {
 		"ghcr.io/devcontainers/features/azure-cli:1": {},
+		"ghcr.io/devcontainers/features/terraform:1": {},
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
 		"ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
-		"ghcr.io/devcontainers/features/terraform:1": {},
-		"ghcr.io/rjfmachado/devcontainer-features/cloud-native:1": {},
+		
+		"ghcr.io/devcontainers-extra/features/kubectl-asdf:2": {},
 		"ghcr.io/devcontainers-extra/features/checkov:1": {},
-		"ghcr.io/devcontainers-extra/features/terraform-docs:1": {},
-		"ghcr.io/devcontainers-extra/features/tfsec:1": {}
-	}
+		"ghcr.io/devcontainers-extra/features/tfsec:1": {},
+		"ghcr.io/devcontainers-extra/features/terraform-docs:1": {}
+	},
+	
+	"postCreateCommand": "sudo az aks install-cli"
+ }
+```
 
 - After that I open the command pallet and type in "Open in dev container".
 - This will open our project in the dev container that is using the above json.
