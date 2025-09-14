@@ -1,0 +1,18 @@
+🎯 Pro Tips:
+
+Terraform SA:
+Use separate storage accounts for different environments (dev/staging/prod)
+Consider customer-managed keys for additional encryption control
+Enable soft delete and versioning for your blob storage to protect against accidental deletion
+Set up a resource lock to prevent accidental deletion of the storage account
+Use Managed Identities instead of storage account keys for authentication
+Configure network rules to restrict access to specific networks
+Set up Azure Key Vault to store sensitive backend configuration
+
+AKS Group:
+Use descriptive group names that indicate purpose and access level
+Implement regular access reviews to ensure appropriate group membership
+Document group purposes and access levels for team reference
+Create multiple AD groups with different levels of access (e.g., read-only, developer, admin)
+Integrate with Privileged Identity Management (PIM) for just-in-time access
+Use Conditional Access policies to enforce multi-factor authentication

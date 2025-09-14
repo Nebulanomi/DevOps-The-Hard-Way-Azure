@@ -14,4 +14,5 @@ az lock create \
 az storage blob service-properties delete-policy update \
   --account-name $STORAGE_ACCOUNT_NAME \
   --enable true \
-  --days-retained $RETAINED_DAYS
+  --days-retained $RETAINED_DAYS \
+  --auth-mode login

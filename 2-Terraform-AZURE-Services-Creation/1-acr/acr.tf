@@ -1,9 +1,7 @@
 resource "azurerm_resource_group" "acr_resource_group" {
-  name     = "${var.name}-rg"
+  name     = "rg-${var.name}"
   location = var.location
-
   tags = var.tags
-
 }
 
 resource "azurerm_container_registry" "acr" {
@@ -12,7 +10,5 @@ resource "azurerm_container_registry" "acr" {
   location            = azurerm_resource_group.acr_resource_group.location
   sku                 = "Standard"
   admin_enabled       = false
-
   tags = var.tags
-
 }

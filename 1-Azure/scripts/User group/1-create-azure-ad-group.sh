@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Configuration
 AZURE_AD_GROUP_NAME="devopsthehardway-aks-group"
@@ -25,7 +25,7 @@ CURRENT_USER_OBJECTID=$(az ad signed-in-user show --query id -o tsv) || handle_e
 echo "Checking if Azure AD Group $AZURE_AD_GROUP_NAME exists..."
 GROUP_EXISTS=$(az ad group list --filter "displayName eq '$AZURE_AD_GROUP_NAME'" --query "[].displayName" -o tsv)
 
-if [ "$GROUP_EXISTS" = "$AZURE_AD_GROUP_NAME" ]; then
+if [ "$GROUP_EXISTS" ]; then
   echo "Azure AD group $AZURE_AD_GROUP_NAME already exists."
 else
   # Create Azure AD Group with description
@@ -33,26 +33,43 @@ else
   az ad group create \
     --display-name $AZURE_AD_GROUP_NAME \
     --mail-nickname $AZURE_AD_GROUP_NAME \
-    --description "Administrators for AKS clusters with full kubectl access" || handle_error "Failed to create Azure AD group"
+    --description "Administrators for AKS clusters with full kubectl access" \
+  || handle_error "Failed to create Azure AD group"
 fi
 
 # Check if Current User is already a member of the Azure AD Group
 echo "Checking if current user is a member of $AZURE_AD_GROUP_NAME..."
-USER_IN_GROUP=$(az ad group member check --group $AZURE_AD_GROUP_NAME --member-id $CURRENT_USER_OBJECTID --query value -o tsv)
+USER_IN_GROUP=$(az ad group member check \
+  --group $AZURE_AD_GROUP_NAME \
+  --member-id $CURRENT_USER_OBJECTID \
+  --query value \
+  -o tsv)
 
-if [ "$USER_IN_GROUP" = "true" ]; then
+if [ "$USER_IN_GROUP" ]; then
   echo "Current user is already a member of the Azure AD group $AZURE_AD_GROUP_NAME."
 else
   # Add Current az login user to Azure AD Group
   echo "Adding current user to Azure AD group $AZURE_AD_GROUP_NAME..."
-  az ad group member add --group $AZURE_AD_GROUP_NAME --member-id $CURRENT_USER_OBJECTID || handle_error "Failed to add current user to Azure AD group"
+  az ad group member add \
+    --group $AZURE_AD_GROUP_NAME \
+    --member-id $CURRENT_USER_OBJECTID \
+  || handle_error "Failed to add current user to Azure AD group"
 fi
 
 echo "Retrieving Azure AD Group ID..."
-AZURE_GROUP_ID=$(az ad group show --group $AZURE_AD_GROUP_NAME --query id -o tsv) || handle_error "Failed to retrieve Azure AD Group ID"
+AZURE_GROUP_ID=$(az ad group show \
+  --group $AZURE_AD_GROUP_NAME \
+  --query id \
+  -o tsv) \
+|| handle_error "Failed to retrieve Azure AD Group ID"
 
+echo ""
 echo "✅ Setup complete!"
 echo "==========================================================================="
 echo "  AZURE AD GROUP ID: $AZURE_GROUP_ID"
 echo "  You'll need this ID for AKS Terraform configurations"
 echo "==========================================================================="
+
+export AKS_ADMIN_GROUP_ID="$AZURE_GROUP_ID"
+echo ""
+echo "Group ID saved!"
