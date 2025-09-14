@@ -1,1 +1,0 @@
-az acr check-name --name "acrdevopsthehardway"

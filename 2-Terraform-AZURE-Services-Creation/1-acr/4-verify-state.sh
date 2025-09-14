@@ -1,3 +1,5 @@
+#/bin/bash
+
 # View created resources
 echo "Current Terraform-managed resources:"
 terraform show

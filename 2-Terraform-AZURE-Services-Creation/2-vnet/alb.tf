@@ -3,7 +3,6 @@ resource "azurerm_application_load_balancer" "alb" {
   name                = "devopsthehardway-alb"
   location            = var.location
   resource_group_name = data.azurerm_resource_group.resource_group.name
-
   tags = var.tags
 }
 

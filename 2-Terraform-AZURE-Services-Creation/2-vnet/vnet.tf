@@ -1,12 +1,9 @@
-
 resource "azurerm_virtual_network" "virtual_network" {
   name                = "${var.name}-vnet"
   location            = var.location
   resource_group_name = data.azurerm_resource_group.resource_group.name
   address_space       = [var.network_address_space]
-
   tags = var.tags
-
 }
 
 resource "azurerm_subnet" "aks_subnet" {

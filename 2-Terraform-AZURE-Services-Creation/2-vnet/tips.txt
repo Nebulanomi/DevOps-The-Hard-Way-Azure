@@ -1,0 +1,4 @@
+Use consistent naming conventions for network resources
+Plan address spaces carefully to avoid conflicts with on-premises networks
+Implement least privilege principle in NSG rules
+Consider Network Watcher for monitoring and diagnostics

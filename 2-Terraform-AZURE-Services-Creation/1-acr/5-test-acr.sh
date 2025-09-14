@@ -1,3 +1,5 @@
+#/bin/bash
+
 name="acrdevopsthehardwayazurecr"
 
 # Pull a test image and push to your ACR

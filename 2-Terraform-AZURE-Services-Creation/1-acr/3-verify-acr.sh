@@ -1,3 +1,5 @@
+#/bin/bash
+
 name="acrdevopsthehardwayazurecr"
 
 # Check ACR exists and is accessible
