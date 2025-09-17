@@ -66,6 +66,8 @@ In this lab, you'll learn how to create an Azure Kubernetes Service (AKS) cluste
    
    Note: All three values will be automatically displayed in the output of the `5-create-github-oidc.sh` script, so you can copy them directly from there.
 
+  Dont forget to add the contributor and blob storage contributor role to the app over the resource group.
+  
 4. **Set Up GitHub Actions Workflow**
 
    ⚠️ **Important**: The workflow file `.github/workflows/main.yml` in this repository is **tutorial content only** and is disabled to prevent accidental runs.

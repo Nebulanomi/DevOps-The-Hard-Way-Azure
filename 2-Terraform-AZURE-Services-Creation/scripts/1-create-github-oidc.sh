@@ -2,7 +2,7 @@
 
 # Configuration
 APP_DISPLAY_NAME="sp-DevOps-The-Hardway-Azure-GitHub-OIDC"
-GITHUB_REPO="Metyis-Global/aks-test"
+GITHUB_REPO="Nebulanomi/DevOps-The-Hard-Way-Azure"
 
 # Error handling function
 handle_error() {
