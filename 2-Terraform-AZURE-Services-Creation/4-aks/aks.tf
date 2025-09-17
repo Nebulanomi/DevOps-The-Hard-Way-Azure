@@ -1,12 +1,12 @@
 resource "azurerm_kubernetes_cluster" "k8s" {
-  name                      = "${var.name}aks"
+  name                      = "aks-${var.name}"
   location                  = var.location
   resource_group_name       = data.azurerm_resource_group.resource_group.name
-  dns_prefix                = "${var.name}dns"
+  dns_prefix                = "dns-${var.name}"
   kubernetes_version        = var.kubernetes_version
   oidc_issuer_enabled       = true
   workload_identity_enabled = true
-  node_resource_group       = "${var.name}-node-rg"
+  node_resource_group       = "rg-node-${var.name}"
   automatic_upgrade_channel = "patch"
   local_account_disabled    = false
 
@@ -30,7 +30,8 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     max_count            = 3
     max_pods             = 30
     os_disk_size_gb      = 30
-    zones                = ["1", "2", "3"]
+    zones                = ["3"]
+    host_encryption_enabled = true
   }
 
   identity {
@@ -55,5 +56,4 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
 
   tags = var.tags
-
 }

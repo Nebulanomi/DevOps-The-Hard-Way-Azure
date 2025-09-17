@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 # Configuration
-APP_DISPLAY_NAME="DevOps-The-Hardway-Azure-GitHub-OIDC"
-GITHUB_REPO="thomast1906/DevOps-The-Hard-Way-Azure"
+APP_DISPLAY_NAME="sp-DevOps-The-Hardway-Azure-GitHub-OIDC"
+GITHUB_REPO="Metyis-Global/aks-test"
 
 # Error handling function
 handle_error() {

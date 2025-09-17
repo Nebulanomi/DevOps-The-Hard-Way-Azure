@@ -5,17 +5,14 @@
 
 name: Terraform-Deploy (Tutorial Example)
 
-# This workflow only runs manually and is intended as tutorial content
 on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
-    inputs:
-      tutorial_mode:
-        description: 'This is a tutorial workflow - copy to your own repo to use'
-        required: true
-        default: 'tutorial-only'
-        type: choice
-        options:
-          - tutorial-only
 
 jobs:
   tutorial-info:
@@ -54,11 +51,10 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
       ARM_USE_OIDC: true
-      tf_resource_group_name: "thomasthorntoncloud"
-      tf_storage_account_name: "thomasthorntontfstate"
-      tf_state_container: "devopsthehardwaygithub"
-      tf_state_key: "terraform.tfstate"
-
+      tf_resource_group_name: "rg-devopsthehardway"
+      tf_storage_account_name: "sadevopshardwaysa"
+      tf_state_container: "tfstate"
+      tf_state_key: "github.tfstate"
 
     steps:
     - name: Checkout Code

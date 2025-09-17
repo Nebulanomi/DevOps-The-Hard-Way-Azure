@@ -1,26 +1,26 @@
 data "azurerm_resource_group" "resource_group" {
-  name = "${var.name}-rg"
+  name = "rg-${var.name}"
 }
 
 data "azurerm_subnet" "akssubnet" {
   name                 = "aks"
-  virtual_network_name = "${var.name}-vnet"
+  virtual_network_name = "rg-${var.name}-vnet"
   resource_group_name  = data.azurerm_resource_group.resource_group.name
 }
 
 data "azurerm_subnet" "appgwsubnet" {
   name                 = "appgw"
-  virtual_network_name = "${var.name}-vnet"
+  virtual_network_name = "rg-${var.name}-vnet"
   resource_group_name  = data.azurerm_resource_group.resource_group.name
 }
 
 data "azurerm_log_analytics_workspace" "workspace" {
-  name                = "${var.name}-la"
+  name                = "law-${var.name}"
   resource_group_name = data.azurerm_resource_group.resource_group.name
 }
 
 data "azurerm_container_registry" "acr" {
-  name                = "${var.name}azurecr"
+  name                = "azurecr${var.name}"
   resource_group_name = data.azurerm_resource_group.resource_group.name
 }
 

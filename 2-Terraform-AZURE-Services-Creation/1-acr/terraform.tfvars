@@ -1,4 +1,4 @@
-name     = "acrdevopsthehardway"
+name     = "devopsthehardway"
 location = "westeurope"
 
 tags = {

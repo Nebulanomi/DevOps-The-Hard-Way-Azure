@@ -1,6 +1,6 @@
 variable "name" {
   type        = string
-  default     = "acrdevopsthehardway"
+  default     = "devopsthehardway"
   description = "Name for resources"
 }
 

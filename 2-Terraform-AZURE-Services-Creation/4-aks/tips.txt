@@ -1,0 +1,10 @@
+Security Best Practices:
+
+Enable Azure Policy for Kubernetes to enforce organisational standards and assess compliance at scale
+Regularly review and audit RBAC permissions
+Monitor cluster logs through the integrated Log Analytics workspace
+Cost Optimisation:
+
+Auto-scaling will automatically adjust node count based on demand
+Use spot instances for non-critical workloads to reduce costs
+Monitor resource usage through Azure Monitor

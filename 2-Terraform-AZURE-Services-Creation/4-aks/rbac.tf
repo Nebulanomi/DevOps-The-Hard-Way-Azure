@@ -20,24 +20,24 @@ resource "azurerm_role_assignment" "acr_pull" {
 
 # Delegate AppGw for Containers Configuration Manager role to RG containing Application Gateway for Containers resource
 # az role assignment create --assignee-object-id $principalId --assignee-principal-type ServicePrincipal --scope $resourceGroupId --role "fbc52c3f-28ad-4303-a892-8a056630b8f1" 
-resource "azurerm_role_assignment" "appgwcontainerfix2" {
-  principal_id         = azurerm_user_assigned_identity.alb_identity.principal_id
-  scope                = data.azurerm_resource_group.resource_group.id
-  role_definition_name = "AppGw for Containers Configuration Manager"
-  depends_on = [
-    azurerm_kubernetes_cluster.k8s,
-    azurerm_user_assigned_identity.alb_identity
-  ]
-}
+# resource "azurerm_role_assignment" "appgwcontainerfix2" {
+#   principal_id         = azurerm_user_assigned_identity.alb_identity.principal_id
+#   scope                = data.azurerm_resource_group.resource_group.id
+#   role_definition_name = "AppGw for Containers Configuration Manager"
+#   depends_on = [
+#     azurerm_kubernetes_cluster.k8s,
+#     azurerm_user_assigned_identity.alb_identity
+#   ]
+# }
 
 # Delegate Network Contributor permission for join to association subnet
 # az role assignment create --assignee-object-id $principalId --assignee-principal-type ServicePrincipal --scope $ALB_SUBNET_ID --role "4d97b98b-1d4f-4787-a291-c67834d212e7" 
-resource "azurerm_role_assignment" "appgwcontainerfix3" {
-  principal_id         = azurerm_user_assigned_identity.alb_identity.principal_id
-  scope                = data.azurerm_subnet.appgwsubnet.id
-  role_definition_name = "Network Contributor"
-  depends_on = [
-    azurerm_kubernetes_cluster.k8s,
-    azurerm_user_assigned_identity.alb_identity
-  ]
-}
+# resource "azurerm_role_assignment" "appgwcontainerfix3" {
+#   principal_id         = azurerm_user_assigned_identity.alb_identity.principal_id
+#   scope                = data.azurerm_subnet.appgwsubnet.id
+#   role_definition_name = "Network Contributor"
+#   depends_on = [
+#     azurerm_kubernetes_cluster.k8s,
+#     azurerm_user_assigned_identity.alb_identity
+#   ]
+# }
