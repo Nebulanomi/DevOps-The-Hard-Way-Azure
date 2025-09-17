@@ -25,9 +25,9 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     vnet_subnet_id       = data.azurerm_subnet.akssubnet.id
     type                 = "VirtualMachineScaleSets"
     orchestrator_version = var.kubernetes_version
-    #auto_scaling_enabled = true
-    min_count            = 1
-    max_count            = 3
+    auto_scaling_enabled = true
+    #min_count            = 1
+    #max_count            = 3
     max_pods             = 30
     os_disk_size_gb      = 30
     zones                = ["3"]
