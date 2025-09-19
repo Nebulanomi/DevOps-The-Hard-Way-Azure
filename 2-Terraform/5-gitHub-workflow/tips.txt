@@ -1,0 +1,10 @@
+Consider implementing these additional best practices:
+
+Use separate state files for different environments (dev, staging, production) to manage multiple AKS clusters efficiently
+Implement branch protection rules to prevent direct pushes to main
+Set up required reviewers for pull requests to the main branch
+
+Configure federated credentials with more specific patterns if needed:
+
+# For specific environments or branches
+"subject": "repo:thomast1906/DevOps-The-Hard-Way-Azure:ref:refs/heads/env-*"

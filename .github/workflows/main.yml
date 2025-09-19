@@ -1,9 +1,4 @@
-# TUTORIAL WORKFLOW - NOT ACTIVE
-# This workflow is part of the DevOps The Hard Way tutorial content
-# It is disabled to prevent accidental runs in the tutorial repository
-# Copy this to their own repositories and modify as needed
-
-name: Terraform-Deploy (Tutorial Example)
+name: Terraform-Deploy
 
 on:
   push:
@@ -77,7 +72,7 @@ jobs:
 
     - name: Terraform Init
       run: terraform init
-      working-directory: ./2-Terraform-AZURE-Services-Creation/4-aks
+      working-directory: ./2-Terraform/4-aks
     
     # Add in tutorial 5-Terraform-Static-Code-Analysis
     # - name: tfsec
@@ -89,7 +84,7 @@ jobs:
     - name: Terraform Format
       if: github.event_name == 'pull_request'
       run: terraform fmt
-      working-directory: ./2-Terraform-AZURE-Services-Creation/4-aks
+      working-directory: ./2-Terraform/4-aks
 
     - name: Auto Commit Changes
       uses: stefanzweifel/git-auto-commit-action@v5
@@ -101,11 +96,11 @@ jobs:
   
     - name: Terraform Plan
       run: terraform plan -no-color -input=false
-      working-directory: ./2-Terraform-AZURE-Services-Creation/4-aks
+      working-directory: ./2-Terraform/4-aks
       env:
-        DEPLOYMENT_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        DEPLOYMENT_SUBSCRIPTION_ID: ${{ env.ARM_SUBSCRIPTION_ID }}
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
       run: terraform apply -auto-approve -input=false
-      working-directory: ./2-Terraform-AZURE-Services-Creation/4-aks
+      working-directory: ./2-Terraform/4-aks

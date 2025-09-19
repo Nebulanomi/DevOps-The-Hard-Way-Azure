@@ -47,7 +47,7 @@ fi
 ACR_NAME=$1
 IMAGE_TAG=${2:-v1}  # Default to v1 if not provided
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
-IMAGE_REPO="thomasthorntoncloud"
+IMAGE_REPO="nebulanomi"
 FULL_IMAGE_TAG="$ACR_NAME.azurecr.io/$IMAGE_REPO:$IMAGE_TAG"
 LATEST_TAG="$ACR_NAME.azurecr.io/$IMAGE_REPO:latest"
 
@@ -71,6 +71,7 @@ fi
 
 # Build the Docker image
 info "Building Docker image with tag '$FULL_IMAGE_TAG'..."
+cd ..
 docker build $PLATFORM_FLAG -t "$FULL_IMAGE_TAG" . || error "Docker build failed."
 
 # Tag with 'latest' as well

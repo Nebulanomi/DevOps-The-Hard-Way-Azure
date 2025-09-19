@@ -1,4 +1,4 @@
-name: Deploy DevOps The Hard Way - Azure
+name: Deploy DevOps The Hard Way (Azure)
 
 on:
   workflow_dispatch:
@@ -20,10 +20,10 @@ on:
 
 env:
   PROJECT_NAME: ${{ github.event.inputs.environment || 'devopsthehardway' }}
-  LOCATION: "uksouth"
-  ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+  LOCATION: "westeurope"
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
   ARM_USE_OIDC: true
 
 jobs:
@@ -42,9 +42,9 @@ jobs:
     - name: 🔐 Azure Login
       uses: azure/login@v2
       with:
-        client-id: ${{ secrets.AZURE_AD_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_AD_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        client-id: ${ARM_CLIENT_ID}
+        tenant-id: ${ARM_TENANT_ID}
+        subscription-id: ${ARM_SUBSCRIPTION_ID}
 
     - name: 🏗️ Setup Terraform
       uses: hashicorp/setup-terraform@v3
@@ -67,8 +67,8 @@ jobs:
 
     - name: 🏗️ Create Terraform State Storage
       run: |
-        TERRAFORM_RG="${PROJECT_NAME}-terraform-rg"
-        STORAGE_ACCOUNT="${PROJECT_NAME}tfstate"
+        TERRAFORM_RG="rg-tfstate-${PROJECT_NAME}"
+        STORAGE_ACCOUNT="$satfstate{PROJECT_NAME}"
         
         # Create resource group for terraform state
         az group create --name "$TERRAFORM_RG" --location "$LOCATION"
@@ -88,7 +88,7 @@ jobs:
 
     - name: 🏗️ Create Azure AD Group for AKS
       run: |
-        GROUP_NAME="AKS-Admins-${PROJECT_NAME}"
+        GROUP_NAME="gr-admins-aks-${PROJECT_NAME}"
         
         # Check if group exists
         GROUP_ID=$(az ad group list --filter "displayName eq '${GROUP_NAME}'" --query "[0].id" -o tsv)
@@ -96,17 +96,20 @@ jobs:
         if [ -z "$GROUP_ID" ] || [ "$GROUP_ID" = "null" ]; then
           echo "Creating new AD group: $GROUP_NAME"
           GROUP_ID=$(az ad group create \
-            --display-name "$GROUP_NAME" \
-            --mail-nickname "aks-admins-${PROJECT_NAME}" \
+            --display-name "${GROUP_NAME}" \
+            --mail-nickname "${GROUP_NAME}" \
             --query id -o tsv)
         fi
         
         echo "AKS_ADMINS_GROUP_ID=$GROUP_ID" >> $GITHUB_ENV
         echo "Azure AD Group ID: $GROUP_ID"
+        # Environment variables written to $GITHUB_ENV are only available for later steps in the same job, not across jobs.
+        # Use this when you need to dynamically set env vars (e.g., values generated at runtime).
+        # For secrets or static vars, its better to use env: or ${{ secrets.NAME }}.
 
     - name: 🏗️ Deploy ACR
       run: |
-        cd 2-Terraform-AZURE-Services-Creation/1-acr
+        cd 2-Terraform/1-acr
         
         # Update terraform.tfvars
         cat > terraform.tfvars << EOF
@@ -122,17 +125,17 @@ jobs:
         EOF
         
         terraform init \
-          -backend-config="resource_group_name=${PROJECT_NAME}-terraform-rg" \
-          -backend-config="storage_account_name=${PROJECT_NAME}tfstate" \
+          -backend-config="resource_group_name=rg-tfstate-${PROJECT_NAME}" \
+          -backend-config="storage_account_name=$satfstate{PROJECT_NAME}" \
           -backend-config="container_name=tfstate" \
-          -backend-config="key=acr-terraform.tfstate"
+          -backend-config="key=acr.tfstate"
         
         terraform plan -out=tfplan
         terraform apply tfplan
 
     - name: 🏗️ Deploy VNET
       run: |
-        cd 2-Terraform-AZURE-Services-Creation/2-vnet
+        cd 2-Terraform/2-vnet
         
         # Update terraform.tfvars
         cat > terraform.tfvars << EOF
@@ -153,17 +156,17 @@ jobs:
         EOF
         
         terraform init \
-          -backend-config="resource_group_name=${PROJECT_NAME}-terraform-rg" \
-          -backend-config="storage_account_name=${PROJECT_NAME}tfstate" \
+          -backend-config="resource_group_name=$rg-tfstate-${PROJECT_NAME}" \
+          -backend-config="storage_account_name=$satfstate{PROJECT_NAME}" \
           -backend-config="container_name=tfstate" \
-          -backend-config="key=vnet-terraform.tfstate"
+          -backend-config="key=vnet.tfstate"
         
         terraform plan -out=tfplan
         terraform apply tfplan
 
     - name: 🏗️ Deploy Log Analytics
       run: |
-        cd 2-Terraform-AZURE-Services-Creation/3-log-analytics
+        cd 2-Terraform/3-log-analytics
         
         # Update terraform.tfvars
         cat > terraform.tfvars << EOF
@@ -179,17 +182,17 @@ jobs:
         EOF
         
         terraform init \
-          -backend-config="resource_group_name=${PROJECT_NAME}-terraform-rg" \
-          -backend-config="storage_account_name=${PROJECT_NAME}tfstate" \
+          -backend-config="resource_group_name=$rg-tfstate-${PROJECT_NAME}" \
+          -backend-config="storage_account_name=$satfstate{PROJECT_NAME}" \
           -backend-config="container_name=tfstate" \
-          -backend-config="key=la-terraform.tfstate"
+          -backend-config="key=law.tfstate"
         
         terraform plan -out=tfplan
         terraform apply tfplan
 
     - name: 🏗️ Deploy AKS Cluster
       run: |
-        cd 2-Terraform-AZURE-Services-Creation/4-aks
+        cd 2-Terraform/4-aks
         
         # Generate SSH key for AKS
         ssh-keygen -t rsa -b 4096 -f ~/.ssh/aks_key -N "" -C "github-actions"
@@ -215,18 +218,18 @@ jobs:
         EOF
         
         terraform init \
-          -backend-config="resource_group_name=${PROJECT_NAME}-terraform-rg" \
-          -backend-config="storage_account_name=${PROJECT_NAME}tfstate" \
+          -backend-config="resource_group_name=$rg-tfstate-${PROJECT_NAME}" \
+          -backend-config="storage_account_name=$satfstate{PROJECT_NAME}" \
           -backend-config="container_name=tfstate" \
-          -backend-config="key=aks-terraform.tfstate"
+          -backend-config="key=aks.tfstate"
         
         terraform plan -out=tfplan
         terraform apply tfplan
         
         # Get AKS credentials
         az aks get-credentials \
-          --resource-group "${PROJECT_NAME}-rg" \
-          --name "${PROJECT_NAME}aks" \
+          --resource-group "$rg-{PROJECT_NAME}" \
+          --name "$aks-{PROJECT_NAME}" \
           --overwrite-existing
 
     - name: 🐳 Build and Push Docker Image
@@ -234,35 +237,35 @@ jobs:
         cd 3-Docker
         
         # Login to ACR
-        az acr login --name "${PROJECT_NAME}azurecr"
+        az acr login --name "$azurecr{PROJECT_NAME}"
         
         # Build and push image
         docker build --platform linux/amd64 \
-          -t "${PROJECT_NAME}azurecr.azurecr.io/thomasthorntoncloud:v2" .
+          -t "${PROJECT_NAME}.azurecr.io/Nebulanomi:v2" .
         
-        docker push "${PROJECT_NAME}azurecr.azurecr.io/thomasthorntoncloud:v2"
+        docker push "${PROJECT_NAME}.azurecr.io/Nebulanomi:v2"
 
     - name: ☸️ Deploy Application to Kubernetes
       run: |
         cd 4-kubernetes_manifest
         
         # Update deployment.yml with correct image
-        sed -i "s/devopsthehardwayazurecr.azurecr.io/${PROJECT_NAME}azurecr.azurecr.io/g" deployment.yml
+        sed -i "s/devopsthehardwayazurecr.azurecr.io/${PROJECT_NAME}.azurecr.io/g" deployment.yml
         
         # Deploy application
         kubectl apply -f deployment.yml
         
         # Wait for deployment to be ready
-        kubectl wait --for=condition=available --timeout=300s deployment/thomasthornton -n thomasthorntoncloud
+        kubectl wait --for=condition=available --timeout=300s deployment/nebulanomi -n azure-app-system
 
     - name: 🌐 Install ALB Controller
       run: |
         cd 4-kubernetes_manifest
         
         # Update script with correct resource names
-        sed -i "s/devopsthehardway-rg/${PROJECT_NAME}-rg/g" scripts/1-alb-controller-install-k8s.sh
-        sed -i "s/devopsthehardwayaks/${PROJECT_NAME}aks/g" scripts/1-alb-controller-install-k8s.sh
-        sed -i "s/devopsthehardway-vnet/${PROJECT_NAME}-vnet/g" scripts/1-alb-controller-install-k8s.sh
+        sed -i "s/devopsthehardway-rg/rg-${PROJECT_NAME}/g" scripts/1-alb-controller-install-k8s.sh
+        sed -i "s/devopsthehardwayaks/aks-${PROJECT_NAME}/g" scripts/1-alb-controller-install-k8s.sh
+        sed -i "s/devopsthehardway-vnet/vnet-${PROJECT_NAME}/g" scripts/1-alb-controller-install-k8s.sh
         
         # Install ALB Controller
         chmod +x scripts/1-alb-controller-install-k8s.sh
@@ -276,8 +279,8 @@ jobs:
         cd 4-kubernetes_manifest
         
         # Update script with correct resource names
-        sed -i "s/devopsthehardwayjuly25-rg/${PROJECT_NAME}-rg/g" scripts/2-gateway-api-resources.sh
-        sed -i "s/devopsthehardway-alb/${PROJECT_NAME}-alb/g" scripts/2-gateway-api-resources.sh
+        sed -i "s/devopsthehardwayjuly25-rg/rg-${PROJECT_NAME}/g" scripts/2-gateway-api-resources.sh
+        sed -i "s/devopsthehardway-alb/alb-${PROJECT_NAME}/g" scripts/2-gateway-api-resources.sh
         
         # Create gateway resources
         chmod +x scripts/2-gateway-api-resources.sh
@@ -289,7 +292,7 @@ jobs:
     - name: 🧪 Test Application
       run: |
         # Get gateway IP
-        GATEWAY_IP=$(kubectl get gateway gateway-01 -n thomasthorntoncloud -o jsonpath='{.status.addresses[0].value}' 2>/dev/null || echo "")
+        GATEWAY_IP=$(kubectl get gateway gateway-01 -n azure-app-system -o jsonpath='{.status.addresses[0].value}' 2>/dev/null || echo "")
         
         if [ -n "$GATEWAY_IP" ]; then
           echo "🌐 Application URL: http://$GATEWAY_IP"
@@ -306,7 +309,7 @@ jobs:
           done
         else
           echo "⚠️ Gateway IP not yet available"
-          kubectl get gateway gateway-01 -n thomasthorntoncloud -o yaml
+          kubectl get gateway gateway-01 -n azure-app-system -o yaml
         fi
 
     - name: 📊 Deployment Summary
@@ -323,7 +326,7 @@ jobs:
         echo "- ✅ ALB Controller and Gateway configured" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         
-        GATEWAY_IP=$(kubectl get gateway gateway-01 -n thomasthorntoncloud -o jsonpath='{.status.addresses[0].value}' 2>/dev/null || echo "Pending")
+        GATEWAY_IP=$(kubectl get gateway gateway-01 -n azure-app-system -o jsonpath='{.status.addresses[0].value}' 2>/dev/null || echo "Pending")
         echo "### 🌐 Application Access:" >> $GITHUB_STEP_SUMMARY
         echo "**URL:** http://$GATEWAY_IP" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
@@ -349,8 +352,8 @@ jobs:
     - name: 🔐 Azure Login
       uses: azure/login@v2
       with:
-        client-id: ${{ secrets.AZURE_AD_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_AD_TENANT_ID }}
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     - name: 🏗️ Setup Terraform

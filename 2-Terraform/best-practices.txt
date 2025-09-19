@@ -1,0 +1,6 @@
+Resource naming conventions following Azure recommendations
+Consistent tagging across all resources for better governance
+Secure network design with proper subnet segregation
+RBAC-based access control
+Infrastructure as Code for reproducibility and consistency
+Remote state management using Azure Storage

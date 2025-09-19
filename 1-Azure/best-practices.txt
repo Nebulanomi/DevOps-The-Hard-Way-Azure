@@ -1,0 +1,5 @@
+Resource naming conventions
+Security-enhanced storage configuration
+RBAC-based access control
+Infrastructure as Code for reproducibility
+Proper error handling in scripts
