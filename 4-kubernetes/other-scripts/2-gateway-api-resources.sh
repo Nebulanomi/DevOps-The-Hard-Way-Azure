@@ -1,4 +1,4 @@
-RESOURCE_GROUP='devopsthehardway-rg'
+RESOURCE_GROUP='rg-devopsthehardway'
 ALB_RESOURCE_NAME='devopsthehardway-alb'
 ALB_FRONTEND_NAME='alb-frontend'
 
@@ -9,8 +9,8 @@ kubectl apply -f - <<EOF
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: gateway-01
-  namespace: thomasthorntoncloud
+  name: nebulanomi-gateway-01
+  namespace: nebulanomi-namespace
   annotations:
     alb.networking.azure.io/alb-id: $RESOURCE_ID
 spec:
@@ -32,13 +32,13 @@ kubectl apply -f - <<EOF
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: traffic-thomasthorntoncloud
-  namespace: thomasthorntoncloud
+  name: nebulanomi-traffic
+  namespace: nebulanomi-namespace
 spec:
   parentRefs:
-  - name: gateway-01
+  - name: nebulanomi-gateway-01
   rules:
   - backendRefs:
-    - name: thomasthorntoncloud
+    - name: nebulanomi-service
       port: 80
 EOF

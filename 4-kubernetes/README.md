@@ -54,3 +54,6 @@ The Kubernetes manifests in this section follow these best practices:
 3. Proper labeling for resources
 4. Security context configurations
 5. Network policies (to be added)
+
+## Diagram of how it works
+![alt text](image.png)

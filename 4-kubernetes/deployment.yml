@@ -1,0 +1,74 @@
+# Benefits: Resource separation, RBAC scoping, easier management
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nebulanomi-namespace
+
+---
+
+# Benefits: Declarative updates, scaling, self-healing
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nebulanomi-deployment
+  namespace: nebulanomi-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nebulanomi-deployment
+  template:
+    metadata:
+      labels:
+        app: nebulanomi-deployment
+    spec:
+      containers:
+      - name: nebulanomi-container
+        image: azurecrdevopsthehardway.azurecr.io/nebulanomi:v3
+        ports:
+        - containerPort: 5000
+        resources:
+          requests:
+          # Requests guarantee minimum resources
+            cpu: 100m
+            # 1,000m (millicores) = 1 CPU core
+            memory: 128Mi
+            # 1Mi (Mebibyte) ≈ 1.048 MB (Megabyte)
+          limits:
+          # Limits prevent resource overconsumption
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+        # Liveness restarts unhealthy containers
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+        # Readiness controls traffic routing to ready containers
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+
+---
+
+# Benefits: Stable IP, load balancing, service discovery
+apiVersion: v1
+kind: Service
+metadata:
+  name: nebulanomi-service
+  namespace: nebulanomi-namespace
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 5000
+  selector:
+    app: nebulanomi-deployment

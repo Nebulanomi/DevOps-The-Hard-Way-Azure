@@ -1,0 +1,5 @@
+Resource requests and limits
+Liveness and readiness probes
+Proper labeling for resources
+Security context configurations
+Network policies (to be added)

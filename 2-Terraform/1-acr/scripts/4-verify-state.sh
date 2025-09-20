@@ -2,6 +2,7 @@
 
 # View created resources
 echo "Current Terraform-managed resources:"
+cd ..
 terraform show
 echo ""
 

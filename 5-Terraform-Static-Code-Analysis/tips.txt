@@ -1,0 +1,2 @@
+Use Checkov's --compact flag to get a more concise output, or --quiet to only see failed checks.
+This can be helpful when integrating with CI/CD pipelines.

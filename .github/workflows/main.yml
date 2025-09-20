@@ -1,9 +1,9 @@
 name: Terraform-Deploy
 
 on:
-  push:
-    branches:
-      - main
+  #push:
+  #  branches:
+  #    - main
   pull_request:
     branches:
       - main
@@ -74,12 +74,12 @@ jobs:
       run: terraform init
       working-directory: ./2-Terraform/4-aks
     
-    # Add in tutorial 5-Terraform-Static-Code-Analysis
-    # - name: tfsec
-    #   uses: aquasecurity/tfsec-pr-commenter-action@v1.3.0
-    #   with:
-    #     tfsec_args: --soft-fail
-    #     github_token: ${{ github.token }}
+    - name: tfsec
+      uses: aquasecurity/tfsec-pr-commenter-action@v1.3.0
+      with:
+        # The --soft-fail argument ensures the workflow doesn't fail when security issues are found, but still reports them as comments on your PR
+        tfsec_args: --soft-fail
+        github_token: ${{ github.token }}
 
     - name: Terraform Format
       if: github.event_name == 'pull_request'

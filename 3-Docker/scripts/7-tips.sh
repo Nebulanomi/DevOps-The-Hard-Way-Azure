@@ -1,3 +1,4 @@
+#bin/bash
 # Use Immutable Tags in Production: For production scenarios, consider using unique tags for each image build (like commit hashes or build IDs) rather than reusing tags like "latest".
 
 # Example using a timestamp for unique tagging

@@ -1,6 +1,11 @@
 # Build with platform specification for compatibility
+# Normal docker build will build for your local machine’s architecture (e.g., arm64 on Apple Silicon Macs, amd64 on most Linux servers)
+# docker buildx build --platform linux/amd64 lets you target a specific platform, even if you’re on a different one
+# You can also build multi-arch images that work on both
 echo "Building Docker image for nebulanomi..."
-docker build --platform linux/amd64 -t nebulanomi:latest .
+docker buildx build \
+  --platform linux/amd64 \
+  -t nebulanomi:latest .
 echo ""
 
 # List Docker images

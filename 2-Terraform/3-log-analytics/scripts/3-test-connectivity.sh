@@ -2,6 +2,7 @@
 
 # Get workspace details from Terraform output
 echo "Retrieving Log Analytics Workspace ID from Terraform output..."
+cd ..
 WORKSPACE_ID=$(terraform output -raw workspace_id)
 echo "Workspace ID: $WORKSPACE_ID"
 echo ""

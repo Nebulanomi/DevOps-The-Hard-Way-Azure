@@ -1,0 +1,11 @@
+Use multiple contexts for different environments (dev, staging, prod)
+Set up kubectl aliases for common commands (k for kubectl)
+Consider kubectx/kubens tools for easier context switching
+Always verify your current context before making changes
+
+Use kubectl explain to understand resource specifications
+Implement horizontal pod autoscaling for production workloads
+Consider Helm charts for complex application packaging
+Set up monitoring and alerting for deployed applications
+
+Use Kubernetes namespaces to organise and isolate your resources, especially when deploying multiple applications or environments in the same cluster.

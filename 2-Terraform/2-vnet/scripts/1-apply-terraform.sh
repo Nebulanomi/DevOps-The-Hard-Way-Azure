@@ -3,6 +3,7 @@
 #Apply Terraform configuration for Azure VNet
 
 echo "Applying Terraform configuration..."
+cd ..
 terraform init -reconfigure
 echo ""
 

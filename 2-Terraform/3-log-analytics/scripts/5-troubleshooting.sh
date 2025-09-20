@@ -6,6 +6,7 @@ subscription_id=$(az account show --query id -o tsv)
 
 # Problem: Workspace name already exists globally
 # Solution: Log Analytics workspace names must be globally unique
+cd ..
 terraform plan | grep "already exists"
 
 # Problem: Insufficient permissions
