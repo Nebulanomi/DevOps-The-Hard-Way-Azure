@@ -1,0 +1,6 @@
+exclude:
+  # Exclude a specific check
+  - azure-storage-use-secure-tls-policy
+
+# Set minimum severity level
+minimum_severity: LOW
