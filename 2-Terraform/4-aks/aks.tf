@@ -19,18 +19,18 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
 
   default_node_pool {
-    name                 = "agentpool"
-    node_count           = var.agent_count
-    vm_size              = var.vm_size
-    vnet_subnet_id       = data.azurerm_subnet.akssubnet.id
-    type                 = "VirtualMachineScaleSets"
-    orchestrator_version = var.kubernetes_version
-    auto_scaling_enabled = true
-    min_count            = 1
-    max_count            = 4
-    max_pods             = 30
-    os_disk_size_gb      = 30
-    zones                = ["3"]
+    name                    = "agentpool"
+    node_count              = var.agent_count
+    vm_size                 = var.vm_size
+    vnet_subnet_id          = data.azurerm_subnet.akssubnet.id
+    type                    = "VirtualMachineScaleSets"
+    orchestrator_version    = var.kubernetes_version
+    auto_scaling_enabled    = true
+    min_count               = 1
+    max_count               = 4
+    max_pods                = 30
+    os_disk_size_gb         = 30
+    zones                   = ["3"]
     host_encryption_enabled = true
   }
 
