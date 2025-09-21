@@ -65,10 +65,10 @@ jobs:
       uses: terraform-docs/gh-actions@v1.3.0
       with:
         working-dir: |
-          ./2-Terraform-AZURE-Services-Creation/1-acr
-          ./2-Terraform-AZURE-Services-Creation/2-vnet
-          ./2-Terraform-AZURE-Services-Creation/3-log-analytics
-          ./2-Terraform-AZURE-Services-Creation/4-aks
+          ./2-Terraform/1-acr
+          ./2-Terraform/2-vnet
+          ./2-Terraform/3-log-analytics
+          ./2-Terraform/4-aks
         output-file: README.md
         output-method: inject
         git-push: "true"
