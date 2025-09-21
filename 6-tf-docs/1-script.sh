@@ -61,10 +61,12 @@ terraform-docs markdown table --output-file README.md --output-mode inject .
 # Review generated content
 cat 2-Terraform/1-acr/README.md
 
-# Create a test change and push to trigger workflow
+# Update main
 git add .
 git commit -m "feat: add terraform-docs configuration"
-git push origin Updates-July-2025
+git push
 
+# Create a new repository branch
+git branch add-terraform-docs && git switch add-terraform-docs
 # Create pull request to trigger documentation generation
 # (This can be done via GitHub UI or GitHub CLI)
