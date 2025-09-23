@@ -1,0 +1,4 @@
+Consistent formatting across all modules improves readability
+Rich descriptions in variables and outputs enhance generated documentation
+Examples in README templates provide context for module usage
+Regular updates ensure documentation stays current with code changes

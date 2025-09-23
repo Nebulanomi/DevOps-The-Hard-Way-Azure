@@ -1,0 +1,19 @@
+# For different documentation in different modules, create module-specific configuration files
+
+formatter: "markdown table"
+
+sections:
+  show:
+    - requirements
+    - providers
+    - inputs
+    - outputs
+    - resources
+
+output:
+  file: README.md
+  mode: inject
+  template: |-
+    <!-- BEGIN_TF_DOCS -->
+    {{ .Content }}
+    <!-- END_TF_DOCS -->
