@@ -5,7 +5,7 @@ terraform {
     storage_account_name = "sadevopshardwaysa"
     container_name       = "tfstate"
     key                  = "aks-terraform.tfstate"
-    use_azuread_auth = true
+    use_azuread_auth     = true
   }
 
   required_providers {

@@ -14,18 +14,13 @@ This Terraform module creates an Azure Container Registry with security best pra
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 4.44.0 |
-
-## Modules
-
-No modules.
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 4.28.0 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
 | [azurerm_container_registry.acr](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_registry) | resource |
-| [azurerm_resource_group.acr_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) | data source |
 
 ## Inputs
 
