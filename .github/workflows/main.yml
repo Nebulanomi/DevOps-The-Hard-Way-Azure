@@ -61,14 +61,18 @@ jobs:
         terraform_version: 1.9.8
         terraform_wrapper: true
 
-    # Add in tutorial 6-Terarform-Docs
-    # - name: Render terraform docs and push changes back to PR
-    #   uses: terraform-docs/gh-actions@v1.3.0
-    #   with:
-    #     working-dir: ./2-Terraform-AZURE-Services-Creation/1-acr, ./2-Terraform-AZURE-Services-Creation/2-vnet, ./2-Terraform-AZURE-Services-Creation/3-log-analytics, ./2-Terraform-AZURE-Services-Creation/4-aks
-    #     output-file: README.md
-    #     output-method: inject
-    #     git-push: "true"
+    - name: Render terraform docs and push changes back to PR
+      uses: terraform-docs/gh-actions@v1.3.0
+      with:
+        working-dir: |
+          ./2-Terraform/1-acr
+          ./2-Terraform/2-vnet
+          ./2-Terraform/3-log-analytics
+          ./2-Terraform/4-aks
+        output-file: README.md
+        output-method: inject
+        git-push: "false"
+        git-commit-message: "docs: update Terraform documentation"
 
     - name: Terraform Init
       run: terraform init
@@ -91,10 +95,10 @@ jobs:
     #     output: trivy-results.sarif
     #     exit-code: 0   # ensures workflow does not fail, similar to --soft-fail
 
-    - name: Upload Trivy scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: trivy-results.sarif
+    # - name: Upload Trivy scan results to GitHub Security tab
+    #   uses: github/codeql-action/upload-sarif@v2
+    #   with:
+    #     sarif_file: trivy-results.sarif
 
     - name: Terraform Format
       if: github.event_name == 'pull_request'
