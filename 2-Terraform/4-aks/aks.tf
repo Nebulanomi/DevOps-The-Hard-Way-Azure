@@ -54,8 +54,4 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     azure_rbac_enabled     = true
     admin_group_object_ids = [var.aks_admins_group_object_id]
   }
-
-  tags = var.tags
 }
-
-##
