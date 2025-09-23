@@ -34,8 +34,4 @@ settings:
   read-comments: true
   required: true
   sensitive: true
-<<<<<<< HEAD
   type: true
-=======
-  type: true
->>>>>>> main
