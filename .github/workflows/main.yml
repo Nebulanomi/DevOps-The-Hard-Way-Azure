@@ -54,6 +54,8 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
+      with:
+        persist-credentials: true
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
