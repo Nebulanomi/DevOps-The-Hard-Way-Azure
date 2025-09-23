@@ -2,6 +2,7 @@
 echo "📖 Validating terraform-docs setup..."
 
 # Check for workflow file
+cd ../..
 if [ -f ".github/workflows/main.yml" ]; then
     echo "✅ GitHub Actions workflow found"
     
