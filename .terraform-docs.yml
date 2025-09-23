@@ -1,3 +1,6 @@
+# File is optional
+# You don’t need it if you’re happy with the defaults of terraform-docs
+
 formatter: "markdown table"
 
 sections:

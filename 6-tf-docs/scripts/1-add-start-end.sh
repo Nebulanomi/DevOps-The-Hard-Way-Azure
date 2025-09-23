@@ -7,7 +7,7 @@ EOF
 # Verify if README.md files contain the string "BEGIN_TF_DOCS"
 sudo find /../workspaces/ -name "README.md" -exec grep -l "BEGIN_TF_DOCS" {} \;
 
-# Create .terraform-docs.yml in repository root
+# Create .terraform-docs.yml in repository root (Optional)
 cd ..
 cat > .terraform-docs.yml << 'EOF'
 formatter: "markdown table"
