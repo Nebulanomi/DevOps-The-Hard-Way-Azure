@@ -71,7 +71,7 @@ jobs:
           ./2-Terraform/4-aks
         output-file: README.md
         output-method: inject
-        git-push: "true"
+        git-push: "false"
         git-commit-message: "docs: update Terraform documentation"
 
     - name: Terraform Init
