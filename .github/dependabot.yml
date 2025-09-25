@@ -4,9 +4,29 @@
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 # https://containers.dev/guide/dependabot
 
+# .github/dependabot.yml
 version: 2
 updates:
- - package-ecosystem: "devcontainers"
-   directory: "/"
-   schedule:
-     interval: weekly
+  # 1️⃣ Dev Container updates
+  - package-ecosystem: "devcontainers"
+    directory: "/"
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "chore(devcontainer)"
+
+  # 2️⃣ Terraform modules & providers
+  - package-ecosystem: "terraform"
+    directory: "/"
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "chore(terraform)"
+
+  # 3️⃣ GitHub Actions workflow updates
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "chore(actions)"
