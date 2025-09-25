@@ -92,7 +92,7 @@ jobs:
       uses: aquasecurity/trivy-action@0.21.0
       with:
         scan-type: config
-        scanners: misconfig
+        misconfig-scanners: misconfig
         ignore-unfixed: true
         format: sarif
         output: trivy-results.sarif
