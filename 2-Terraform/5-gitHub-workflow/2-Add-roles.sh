@@ -16,3 +16,8 @@ echo ""
 echo "Assigning Contributor role to the service principal..."
 az role assignment create --assignee $SP_ID --role "Contributor" --scope "/subscriptions/$subscriptionId"
 echo ""
+
+# Assign Storage Blob Data Contributor role to the storage account
+echo "Assigning Contributor role to the service principal..."
+az role assignment create --assignee $SP_ID --role "Storage Blob Data Contributor" --scope "/subscriptions/$subscriptionId"
+echo ""

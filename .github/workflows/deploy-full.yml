@@ -160,7 +160,7 @@ jobs:
         EOF
         
         terraform init \
-          -backend-config="resource_group_name=$rg-tfstate-${PROJECT_NAME}" \
+          -backend-config="resource_group_name=rg-tfstate-${PROJECT_NAME}" \
           -backend-config="storage_account_name=sametyistfstate${PROJECT_NAME}" \
           -backend-config="container_name=tfstate" \
           -backend-config="key=vnet.tfstate" \
@@ -187,7 +187,7 @@ jobs:
         EOF
         
         terraform init \
-          -backend-config="resource_group_name=$rg-tfstate-${PROJECT_NAME}" \
+          -backend-config="resource_group_name=rg-tfstate-${PROJECT_NAME}" \
           -backend-config="storage_account_name=sametyistfstate${PROJECT_NAME}" \
           -backend-config="container_name=tfstate" \
           -backend-config="key=law.tfstate" \
@@ -224,7 +224,7 @@ jobs:
         EOF
         
         terraform init \
-          -backend-config="resource_group_name=$rg-tfstate-${PROJECT_NAME}" \
+          -backend-config="resource_group_name=rg-tfstate-${PROJECT_NAME}" \
           -backend-config="storage_account_name=sametyistfstate${PROJECT_NAME}" \
           -backend-config="container_name=tfstate" \
           -backend-config="key=aks.tfstate" \

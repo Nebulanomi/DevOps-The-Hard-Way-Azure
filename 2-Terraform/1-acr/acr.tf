@@ -3,7 +3,7 @@ data "azurerm_resource_group" "acr_resource_group" {
 }
 
 resource "azurerm_container_registry" "acr" {
-  name                = "azurecr${var.name}"
+  name                = "azuremetyiscr${var.name}"
   resource_group_name = data.azurerm_resource_group.acr_resource_group.name
   location            = data.azurerm_resource_group.acr_resource_group.location
   sku                 = "Standard"
