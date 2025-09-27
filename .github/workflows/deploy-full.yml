@@ -89,26 +89,27 @@ jobs:
           --account-name "$STORAGE_ACCOUNT" \
           --auth-mode login
 
-    # - name: 🏗️ Create Azure AD Group for AKS
-    #   run: |
-    #     GROUP_NAME="gr-admins-aks-${PROJECT_NAME}"
+    - name: 🏗️ Create Azure AD Group for AKS
+      run: |
+        GROUP_NAME="gr-admins-aks-${PROJECT_NAME}"
         
-    #     # Check if group exists
-    #     GROUP_ID=$(az ad group list --filter "displayName eq '${GROUP_NAME}'" --query "[0].id" -o tsv)
+        # Check if group exists
+        GROUP_ID=$(az ad group list --filter "displayName eq '${GROUP_NAME}'" --query "[0].id" -o tsv)
         
-    #     if [ -z "$GROUP_ID" ] || [ "$GROUP_ID" = "null" ]; then
-    #       echo "Creating new AD group: $GROUP_NAME"
-    #       GROUP_ID=$(az ad group create \
-    #         --display-name "${GROUP_NAME}" \
-    #         --mail-nickname "${GROUP_NAME}" \
-    #         --query id -o tsv)
-    #     fi
+        if [ -z "$GROUP_ID" ] || [ "$GROUP_ID" = "null" ]; then
+          echo "Creating new AD group: $GROUP_NAME"
+          GROUP_ID=$(az ad group create \
+            --display-name "${GROUP_NAME}" \
+            --mail-nickname "${GROUP_NAME}" \
+            --query id -o tsv)
+        fi
         
-    #     echo "AKS_ADMINS_GROUP_ID=$GROUP_ID" >> $GITHUB_ENV
-    #     echo "Azure AD Group ID: $GROUP_ID"
-    #     # Environment variables written to $GITHUB_ENV are only available for later steps in the same job, not across jobs.
-    #     # Use this when you need to dynamically set env vars (e.g., values generated at runtime).
-    #     # For secrets or static vars, its better to use env: or ${{ secrets.NAME }}.
+        echo "AKS_ADMINS_GROUP_ID=$GROUP_ID" >> $GITHUB_ENV
+        echo "Azure AD Group ID: $GROUP_ID"
+        
+        # Environment variables written to $GITHUB_ENV are only available for later steps in the same job, not across jobs.
+        # Use this when you need to dynamically set env vars (e.g., values generated at runtime).
+        # For secrets or static vars, its better to use env: or ${{ secrets.NAME }}.
 
     - name: 🏗️ Deploy ACR
       run: |
