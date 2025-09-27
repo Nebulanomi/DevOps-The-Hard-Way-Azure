@@ -86,7 +86,8 @@ jobs:
         # Create storage container
         az storage container create \
           --name tfstate \
-          --account-name "$STORAGE_ACCOUNT"
+          --account-name "$STORAGE_ACCOUNT" \
+          --auth-mode login
 
     - name: 🏗️ Create Azure AD Group for AKS
       run: |
