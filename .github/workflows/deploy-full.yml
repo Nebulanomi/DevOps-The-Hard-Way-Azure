@@ -80,7 +80,8 @@ jobs:
           --location "$LOCATION" \
           --sku Standard_LRS \
           --encryption-services blob \
-          --allow-blob-public-access false
+          --allow-blob-public-access false \
+          --allow-shared-key-access false \
           
         # Create storage container
         az storage container create \
