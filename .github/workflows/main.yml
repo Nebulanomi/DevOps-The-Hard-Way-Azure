@@ -82,7 +82,7 @@ jobs:
       working-directory: ./2-Terraform/4-aks
     
     - name: tfsec
-      uses: aquasecurity/tfsec-pr-commenter-action@v1.3.0
+      uses: aquasecurity/tfsec-pr-commenter-action@v1.3.1
       with:
         # The --soft-fail argument ensures the workflow doesn't fail when security issues are found, but still reports them as comments on your PR
         tfsec_args: --soft-fail
