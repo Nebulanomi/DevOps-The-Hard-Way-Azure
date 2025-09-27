@@ -1,4 +1,4 @@
-name: Deploy DevOps The Hard Way (Azure)
+name: Deploy project (dev | staging | prod)
 
 on:
   workflow_dispatch:
@@ -79,8 +79,9 @@ jobs:
           --resource-group "$TERRAFORM_RG" \
           --location "$LOCATION" \
           --sku Standard_LRS \
-          --encryption-services blob
-        
+          --encryption-services blob \
+          --allow-blob-public-access false
+          
         # Create storage container
         az storage container create \
           --name tfstate \
