@@ -1,0 +1,7 @@
+Always test in dev environment first
+Use version control for custom modifications
+Monitor resource usage and costs
+Keep secrets secure and rotated
+Use descriptive project names for multiple environments
+Document any customizations
+Regularly update tool versions

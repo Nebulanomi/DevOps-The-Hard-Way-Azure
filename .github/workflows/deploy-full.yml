@@ -130,8 +130,8 @@ jobs:
           -backend-config="container_name=tfstate" \
           -backend-config="key=acr.tfstate"
         
-        terraform plan -out=tfplan
-        terraform apply tfplan
+        terraform plan -out=tfplan -var-file="terraform.tfvars"
+        terraform apply tfplan -var-file="terraform.tfvars"
 
     - name: 🏗️ Deploy VNET
       run: |
@@ -161,8 +161,8 @@ jobs:
           -backend-config="container_name=tfstate" \
           -backend-config="key=vnet.tfstate"
         
-        terraform plan -out=tfplan
-        terraform apply tfplan
+        terraform plan -out=tfplan -var-file="terraform.tfvars"
+        terraform apply tfplan -var-file="terraform.tfvars"
 
     - name: 🏗️ Deploy Log Analytics
       run: |
@@ -187,8 +187,8 @@ jobs:
           -backend-config="container_name=tfstate" \
           -backend-config="key=law.tfstate"
         
-        terraform plan -out=tfplan
-        terraform apply tfplan
+        terraform plan -out=tfplan -var-file="terraform.tfvars"
+        terraform apply tfplan -var-file="terraform.tfvars"
 
     - name: 🏗️ Deploy AKS Cluster
       run: |
@@ -223,8 +223,8 @@ jobs:
           -backend-config="container_name=tfstate" \
           -backend-config="key=aks.tfstate"
         
-        terraform plan -out=tfplan
-        terraform apply tfplan
+        terraform plan -out=tfplan -var-file="terraform.tfvars"
+        terraform apply tfplan -var-file="terraform.tfvars"
         
         # Get AKS credentials
         az aks get-credentials \
@@ -247,10 +247,10 @@ jobs:
 
     - name: ☸️ Deploy Application to Kubernetes
       run: |
-        cd 4-kubernetes_manifest
+        cd 4-kubernetes
         
         # Update deployment.yml with correct image
-        sed -i "s/devopsthehardwayazurecr.azurecr.io/${PROJECT_NAME}.azurecr.io/g" deployment.yml
+        sed -i "s/azurecrdevopsthehardway.azurecr.io/${PROJECT_NAME}.azurecr.io/g" deployment.yml
         
         # Deploy application
         kubectl apply -f deployment.yml
@@ -260,12 +260,10 @@ jobs:
 
     - name: 🌐 Install ALB Controller
       run: |
-        cd 4-kubernetes_manifest
+        cd 4-kubernetes
         
         # Update script with correct resource names
-        sed -i "s/devopsthehardway-rg/rg-${PROJECT_NAME}/g" scripts/1-alb-controller-install-k8s.sh
-        sed -i "s/devopsthehardwayaks/aks-${PROJECT_NAME}/g" scripts/1-alb-controller-install-k8s.sh
-        sed -i "s/devopsthehardway-vnet/vnet-${PROJECT_NAME}/g" scripts/1-alb-controller-install-k8s.sh
+        sed -i "s/rg-devopsthehardway/rg-${PROJECT_NAME}/g" other-scripts/1-alb-controller-install-k8s.sh
         
         # Install ALB Controller
         chmod +x scripts/1-alb-controller-install-k8s.sh
@@ -276,12 +274,12 @@ jobs:
 
     - name: 🌐 Create Gateway Resources
       run: |
-        cd 4-kubernetes_manifest
+        cd 4-kubernetes
         
         # Update script with correct resource names
-        sed -i "s/devopsthehardwayjuly25-rg/rg-${PROJECT_NAME}/g" scripts/2-gateway-api-resources.sh
-        sed -i "s/devopsthehardway-alb/alb-${PROJECT_NAME}/g" scripts/2-gateway-api-resources.sh
-        
+        sed -i "s/rg-devopsthehardway/rg-${PROJECT_NAME}/g" other-scripts/2-gateway-api-resources.sh
+        sed -i "s/devopsthehardway-alb/alb-${PROJECT_NAME}/g" other-scripts/2-gateway-api-resources.sh
+      
         # Create gateway resources
         chmod +x scripts/2-gateway-api-resources.sh
         ./scripts/2-gateway-api-resources.sh
