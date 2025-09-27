@@ -1,4 +1,4 @@
-name     = "devopsthehardway"
+name     = "dev"
 location = "westeurope"
 
 tags = {

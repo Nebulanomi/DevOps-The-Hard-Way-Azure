@@ -134,7 +134,7 @@ jobs:
           -backend-config="key=acr.tfstate"
         
         terraform plan -out=tfplan -var-file="terraform.tfvars"
-        terraform apply tfplan -var-file="terraform.tfvars"
+        terraform apply tfplan
 
     - name: 🏗️ Deploy VNET
       run: |
@@ -165,7 +165,7 @@ jobs:
           -backend-config="key=vnet.tfstate"
         
         terraform plan -out=tfplan -var-file="terraform.tfvars"
-        terraform apply tfplan -var-file="terraform.tfvars"
+        terraform apply tfplan
 
     - name: 🏗️ Deploy Log Analytics
       run: |
@@ -191,7 +191,7 @@ jobs:
           -backend-config="key=law.tfstate"
         
         terraform plan -out=tfplan -var-file="terraform.tfvars"
-        terraform apply tfplan -var-file="terraform.tfvars"
+        terraform apply tfplan
 
     - name: 🏗️ Deploy AKS Cluster
       run: |
@@ -227,7 +227,7 @@ jobs:
           -backend-config="key=aks.tfstate"
         
         terraform plan -out=tfplan -var-file="terraform.tfvars"
-        terraform apply tfplan -var-file="terraform.tfvars"
+        terraform apply tfplan
         
         # Get AKS credentials
         az aks get-credentials \
