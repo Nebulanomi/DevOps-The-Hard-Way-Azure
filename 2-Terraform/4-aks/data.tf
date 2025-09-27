@@ -1,5 +1,5 @@
 data "azurerm_resource_group" "resource_group" {
-  name = "rg-${var.name}"
+  name     = "rg-tfstate-${var.name}"
 }
 
 data "azurerm_subnet" "akssubnet" {

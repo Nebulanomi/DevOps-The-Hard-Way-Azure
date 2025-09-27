@@ -4,7 +4,7 @@
 
 echo "Applying Terraform configuration..."
 cd ..
-terraform init
+terraform init --reconfigure
 echo ""
 
 echo "Validating and applying Terraform configuration..."

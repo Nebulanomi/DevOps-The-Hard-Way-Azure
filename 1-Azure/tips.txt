@@ -1,5 +1,3 @@
-🎯 Pro Tips:
-
 Terraform SA:
 Use separate storage accounts for different environments (dev/staging/prod)
 Consider customer-managed keys for additional encryption control

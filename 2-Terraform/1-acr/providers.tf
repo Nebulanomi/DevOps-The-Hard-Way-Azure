@@ -1,8 +1,8 @@
 terraform {
   required_version = ">= 1.9.8"
   backend "azurerm" {
-    resource_group_name  = "rg-devopshardway"
-    storage_account_name = "sadevopshardwaysa"
+    resource_group_name  = "rg-tfstate-dev"
+    storage_account_name = "sametyistfstatedev"
     container_name       = "tfstate"
     key                  = "acr-terraform.tfstate"
     use_azuread_auth = true

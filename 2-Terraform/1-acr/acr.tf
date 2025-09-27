@@ -1,5 +1,5 @@
 data "azurerm_resource_group" "acr_resource_group" {
-  name     = "rg-${var.name}"
+  name     = "rg-tfstate-${var.name}"
 }
 
 resource "azurerm_container_registry" "acr" {
