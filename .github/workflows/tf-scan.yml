@@ -1,0 +1,66 @@
+name: Terraform-checks
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  terraform-checks:
+    name: 🛠️ Terraform Security & Validation Checks
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        module:
+          - 2-Terraform/1-acr
+          - 2-Terraform/2-vnet
+          - 2-Terraform/3-log-analytics
+          - 2-Terraform/4-aks
+
+    steps:
+    - name: 📥 Checkout
+      uses: actions/checkout@v4
+
+    - name: 🏗️ Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.9.8
+
+    - name: 🧹 Terraform Fmt
+      run: terraform fmt -check -recursive
+      working-directory: ${{ matrix.module }}
+
+    - name: ✅ Terraform Validate
+      run: |
+        terraform init -backend=false
+        terraform validate
+      working-directory: ${{ matrix.module }}
+
+    - name: 🛡️ tfsec Security Scan
+      uses: aquasecurity/tfsec-pr-commenter-action@v1.3.0
+      with:
+        working_directory: ${{ matrix.module }}
+        tfsec_args: --soft-fail
+        github_token: ${{ github.token }}
+
+    - name: 🧪 Trivy IaC Scan
+      uses: aquasecurity/trivy-action@0.21.0
+      with:
+        scan-type: config
+        misconfig-scanners: misconfig
+        ignore-unfixed: true
+        format: sarif
+        output: trivy-${{ matrix.module##*/ }}.sarif
+        exit-code: 0
+        scan-ref: ${{ matrix.module }}
+
+    - name: 📊 Upload Trivy Results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: trivy-${{ matrix.module##*/ }}.sarif

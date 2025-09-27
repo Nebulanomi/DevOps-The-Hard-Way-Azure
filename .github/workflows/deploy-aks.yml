@@ -1,0 +1,128 @@
+name: Terraform-Deploy
+
+on:
+  #push:
+  #  branches:
+  #    - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  tutorial-info:
+    name: ⚠️ Tutorial Workflow Information
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.tutorial_mode == 'tutorial-only' }}
+    
+    steps:
+    - name: Tutorial Information
+      run: |
+        echo "🎓 This is a TUTORIAL workflow from DevOps The Hard Way - Azure"
+        echo ""
+        echo "📋 This workflow is provided as example content for learning purposes."
+        echo "📋 It is not intended to run in the tutorial repository."
+        echo ""
+        echo "✅ To use this workflow:"
+        echo "1. Copy this repository to your own GitHub account"
+        echo "2. Set up Azure OIDC authentication secrets"
+        echo "3. Modify the workflow for your specific needs"
+        echo "4. Update the terraform.tfvars and backend configuration"
+        echo ""
+        echo "📚 For full instructions, see the tutorial documentation."
+        echo ""
+        echo "❌ This workflow will not deploy any resources in tutorial mode."
+
+  terraform:
+    name: Terraform-Deploy
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.tutorial_mode != 'tutorial-only' }}
+    permissions:
+      contents: write
+      id-token: write  # Required for OIDC
+      security-events: write   # ✅ needed for uploading SARIF
+      
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_USE_OIDC: true
+      tf_resource_group_name: "rg-devopsthehardway"
+      tf_storage_account_name: "sadevopshardwaysa"
+      tf_state_container: "tfstate"
+      tf_state_key: "github.tfstate"
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: true
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.9.8
+        terraform_wrapper: true
+
+    - name: Render terraform docs and push changes back to PR
+      uses: terraform-docs/gh-actions@v1.3.0
+      with:
+        working-dir: |
+          ./2-Terraform/1-acr
+          ./2-Terraform/2-vnet
+          ./2-Terraform/3-log-analytics
+          ./2-Terraform/4-aks
+        output-file: README.md
+        output-method: inject
+        git-push: "true"
+        git-commit-message: "docs: update Terraform documentation"
+
+    - name: Terraform Init
+      run: terraform init
+      working-directory: ./2-Terraform/4-aks
+    
+    - name: tfsec
+      uses: aquasecurity/tfsec-pr-commenter-action@v1.3.0
+      with:
+        # The --soft-fail argument ensures the workflow doesn't fail when security issues are found, but still reports them as comments on your PR
+        tfsec_args: --soft-fail
+        github_token: ${{ github.token }}
+
+    - name: Run Trivy IaC scan
+      uses: aquasecurity/trivy-action@0.21.0
+      with:
+        scan-type: config
+        misconfig-scanners: misconfig
+        ignore-unfixed: true
+        format: sarif
+        output: trivy-results.sarif
+        exit-code: 0   # ensures workflow does not fail, similar to --soft-fail
+
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: trivy-results.sarif
+
+    - name: Terraform Format
+      if: github.event_name == 'pull_request'
+      run: terraform fmt
+      working-directory: ./2-Terraform/4-aks
+
+    - name: Auto Commit Changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      if: github.event_name == 'pull_request'
+      with:
+        commit_message: "Terraform fmt"
+        file_pattern: "*.tf *.tfvars"
+        commit_user_name: "github-actions[bot]"
+  
+    - name: Terraform Plan
+      run: terraform plan -no-color -input=false
+      working-directory: ./2-Terraform/4-aks
+      env:
+        DEPLOYMENT_SUBSCRIPTION_ID: ${{ env.ARM_SUBSCRIPTION_ID }}
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+      run: terraform apply -auto-approve -input=false
+      working-directory: ./2-Terraform/4-aks
