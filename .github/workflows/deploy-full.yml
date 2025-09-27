@@ -131,7 +131,8 @@ jobs:
           -backend-config="resource_group_name=rg-tfstate-${PROJECT_NAME}" \
           -backend-config="storage_account_name=sametyistfstate${PROJECT_NAME}" \
           -backend-config="container_name=tfstate" \
-          -backend-config="key=acr.tfstate"
+          -backend-config="key=acr.tfstate" \
+          -backend-config="use_azuread_auth=true"
         
         terraform plan -out=tfplan -var-file="terraform.tfvars"
         terraform apply tfplan
@@ -162,7 +163,8 @@ jobs:
           -backend-config="resource_group_name=$rg-tfstate-${PROJECT_NAME}" \
           -backend-config="storage_account_name=sametyistfstate${PROJECT_NAME}" \
           -backend-config="container_name=tfstate" \
-          -backend-config="key=vnet.tfstate"
+          -backend-config="key=vnet.tfstate" \
+          -backend-config="use_azuread_auth=true"
         
         terraform plan -out=tfplan -var-file="terraform.tfvars"
         terraform apply tfplan
@@ -188,7 +190,8 @@ jobs:
           -backend-config="resource_group_name=$rg-tfstate-${PROJECT_NAME}" \
           -backend-config="storage_account_name=sametyistfstate${PROJECT_NAME}" \
           -backend-config="container_name=tfstate" \
-          -backend-config="key=law.tfstate"
+          -backend-config="key=law.tfstate" \
+          -backend-config="use_azuread_auth=true"
         
         terraform plan -out=tfplan -var-file="terraform.tfvars"
         terraform apply tfplan
@@ -224,7 +227,8 @@ jobs:
           -backend-config="resource_group_name=$rg-tfstate-${PROJECT_NAME}" \
           -backend-config="storage_account_name=sametyistfstate${PROJECT_NAME}" \
           -backend-config="container_name=tfstate" \
-          -backend-config="key=aks.tfstate"
+          -backend-config="key=aks.tfstate" \
+          -backend-config="use_azuread_auth=true"
         
         terraform plan -out=tfplan -var-file="terraform.tfvars"
         terraform apply tfplan

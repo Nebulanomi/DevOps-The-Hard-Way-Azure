@@ -12,7 +12,7 @@ terraform validate
 echo ""
 
 echo "Planning and applying changes..."
-terraform plan -var-file="terraform.tfvars"
+terraform plan -out=plan.out -var-file="terraform.tfvars"
 echo ""
 
 echo "Executing Terraform apply..."
