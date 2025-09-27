@@ -68,7 +68,7 @@ jobs:
     - name: 🏗️ Create Terraform State Storage
       run: |
         TERRAFORM_RG="rg-tfstate-${PROJECT_NAME}"
-        STORAGE_ACCOUNT="$satfstate${PROJECT_NAME}"
+        STORAGE_ACCOUNT="sametyistfstate${PROJECT_NAME}"
         
         # Create resource group for terraform state
         az group create --name "$TERRAFORM_RG" --location "$LOCATION"
