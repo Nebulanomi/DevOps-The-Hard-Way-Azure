@@ -56,11 +56,11 @@ jobs:
         misconfig-scanners: misconfig
         ignore-unfixed: true
         format: sarif
-        output: trivy-${{ matrix.module##*/ }}.sarif
+        output: trivy-${{ matrix.module }}.sarif
         exit-code: 0
         scan-ref: ${{ matrix.module }}
 
     - name: 📊 Upload Trivy Results
       uses: github/codeql-action/upload-sarif@v2
       with:
-        sarif_file: trivy-${{ matrix.module##*/ }}.sarif
+        sarif_file: trivy-${{ matrix.module }}.sarif
