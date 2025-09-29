@@ -50,7 +50,7 @@ jobs:
         github_token: ${{ github.token }}
 
     - name: 🧪 Trivy IaC Scan
-      uses: aquasecurity/trivy-action@0.21.0
+      uses: aquasecurity/trivy-action@0.33.1
       with:
         scan-type: config
         misconfig-scanners: misconfig
