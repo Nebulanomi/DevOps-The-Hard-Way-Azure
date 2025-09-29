@@ -65,7 +65,7 @@ jobs:
         terraform_wrapper: true
 
     - name: Render terraform docs and push changes back to PR
-      uses: terraform-docs/gh-actions@v1.3.0
+      uses: terraform-docs/gh-actions@v1.4.1
       with:
         working-dir: |
           ./2-Terraform/1-acr
