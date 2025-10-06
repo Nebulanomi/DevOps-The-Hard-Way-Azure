@@ -43,7 +43,7 @@ jobs:
       working-directory: ${{ matrix.module }}
 
     - name: 🛡️ tfsec Security Scan
-      uses: aquasecurity/tfsec-pr-commenter-action@v1.3.0
+      uses: aquasecurity/tfsec-pr-commenter-action@v1.3.1
       with:
         working_directory: ${{ matrix.module }}
         tfsec_args: --soft-fail
